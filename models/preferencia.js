@@ -14,4 +14,4 @@ const preferenciaSchema = new mongoose.Schema({
     },
 })
 
-module.exports = mongoose.model( `Preferencia`, preferenciaSchema )
+module.exports = mongoose.model( `Preferencia`, preferenciaSchema, 'preferencias' )
