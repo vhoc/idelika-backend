@@ -1,9 +1,11 @@
 require( 'dotenv' ).config()
 
 const express = require( "express" )
+const outlookAuthRouter = require('./routes/outlook-auth');
+
 const app = express()
 
-// In memory storage ot logged in users
+// In memory storage ot logged in users 
 app.locals.users = {};
 
 // MSAL config
@@ -40,5 +42,6 @@ app.use( express.urlencoded( { encoded: true } ) )
 app.use( express.json() )
 
 app.use( "/usuarios", userRouter )
+app.use( "/outlook-auth", outlookAuthRouter )
 
 app.listen( 3000, () => console.info( `West Telco Backend Started` ) )
