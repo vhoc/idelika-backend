@@ -1,5 +1,5 @@
 const express = require( 'express' )
-const res = require('express/lib/response')
+//const res = require('express/lib/response')
 const router = express.Router()
 const Usuario = require( `../models/usuario` )
 const bcrypt = require( 'bcrypt' )
