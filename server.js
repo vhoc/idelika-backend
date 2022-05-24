@@ -3,6 +3,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const msal = require("@azure/msal-node");
 
+const cors = require( `cors` )
 const express = require( "express" )
 
 const outlookAuthRouter = require('./routes/outlook-auth');
@@ -11,6 +12,7 @@ const authRouter = require( `./routes/auth` )
 
 
 const app = express()
+app.use( cors() )
 app.use( express.json() )
 
 // Session middleware

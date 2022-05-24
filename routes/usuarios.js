@@ -87,7 +87,7 @@ router.post( '/login', async ( request, response ) => {
     try {
         ! await bcrypt.compare( request.body.password, usuario.password ) ?
             response.status(401).json( { status: 401, message: "Credenciales inválidas" } ) :
-        response.status(200).json( { status: 200, message: "Autenticación exitosa.", accessToken, refreshToken } )
+        response.status(200).json( { status: 200, message: "Autenticación exitosa.", userId: usuario._id, email: usuario.email, nombre: usuario.nombre, empresa: usuario.empresa, activo: usuario.active, accessToken, refreshToken } )
 
     } catch (error) {
         response.status(500).json( { status: 500, message: error } )
