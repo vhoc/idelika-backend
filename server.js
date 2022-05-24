@@ -7,6 +7,7 @@ const express = require( "express" )
 
 const outlookAuthRouter = require('./routes/outlook-auth');
 const indexRouter = require( './routes/index' )
+const authRouter = require( `./routes/auth` )
 
 
 const app = express()
@@ -87,6 +88,7 @@ app.use( express.json() )
 
 app.use( "/usuarios", userRouter )
 app.use( "/outlook-auth", outlookAuthRouter )
+app.use( `/auth`, authRouter )
 app.use( '/', indexRouter )
 
-app.listen( 3000, () => console.info( `West Telco Backend Started` ) )
+app.listen( 5000, () => console.info( `West Telco Backend Started` ) )

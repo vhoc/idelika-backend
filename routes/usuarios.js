@@ -5,6 +5,9 @@ const Usuario = require( `../models/usuario` )
 const bcrypt = require( 'bcrypt' )
 const mongoose = require('mongoose')
 const { validateCreate } = require( '../validators/usuarios' )
+const { generateAccessToken } = require( '../helpers/generateAccessToken' )
+const RefreshToken = require( `../models/refreshToken` )
+const jwt = require( `jsonwebtoken` )
 
 mongoose.connect( process.env.DATABASE_URL, () => {
     console.log( "Connected to database" )
@@ -74,13 +77,18 @@ router.delete( '/:id', ( request, response ) => {
 // Login
 router.post( '/login', async ( request, response ) => {
         const usuario = await Usuario.findOne( { email: request.body.email } )
-        console.log(usuario)
-        if( usuario == null ) return response.status(400).send('No se encontró el usuario')
-
+        if( usuario == null ) return response.status(404).json( { status: 404, message: "No se encontró el usuario" } )
+        console.log( usuario.email )
+        // Generte token
+        const usuarioObject = { email: usuario.email }
+        const accessToken = generateAccessToken( usuarioObject )
+        const refreshToken = jwt.sign( usuarioObject, process.env.REFRESH_TOKEN_SECRET )
+        RefreshToken.create( { refreshToken } )
     try {
         ! await bcrypt.compare( request.body.password, usuario.password ) ?
-            response.status(403).json( { status: 403, message: "Invalid credentials" } ) :
-        response.status(200).json( { status: 200, message: "Logged in" } )
+            response.status(401).json( { status: 401, message: "Credenciales inválidas" } ) :
+        response.status(200).json( { status: 200, message: "Autenticación exitosa.", accessToken, refreshToken } )
+
     } catch (error) {
         response.status(500).json( { status: 500, message: error } )
     }

@@ -21,4 +21,4 @@ const reunionSchema = new mongoose.Schema({
     },
 })
 
-module.exports = mongoose.model( `Preferencia`, reunionSchema, 'reuniones' )
+module.exports = mongoose.model( `Reunion`, reunionSchema, 'reuniones' )
