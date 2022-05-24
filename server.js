@@ -10,6 +10,7 @@ const indexRouter = require( './routes/index' )
 
 
 const app = express()
+app.use( express.json() )
 
 // Session middleware
 // NOTE: Uses default in-memory session store, which is not
@@ -72,13 +73,13 @@ app.locals.msalClient = new msal.ConfidentialClientApplication(msalConfig);
 
 app.set('view engine', 'hbs');
 
-const mongoose = require( 'mongoose' )
+//const mongoose = require( 'mongoose' )
 const userRouter = require( "./routes/usuarios" )
 
-mongoose.connect( process.env.DATABASE_URL, { useNewUrlParser: true } )
-const db = mongoose.connection
-db.on( 'error', error => console.error( error ) )
-db.once( 'open', () => console.log( `Connected to database.` ) )
+//mongoose.connect( process.env.DATABASE_URL, { useNewUrlParser: true } )
+//const db = mongoose.connection
+//db.on( 'error', error => console.error( error ) )
+//db.once( 'open', () => console.log( `Connected to database.` ) )
 
 app.use( express.static( 'public' ) )
 app.use( express.urlencoded( { encoded: true } ) )

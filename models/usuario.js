@@ -13,13 +13,6 @@ const usuarioSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    apellidoPaterno: {
-        type: String,
-        required: true,
-    },
-    apellidoMaterno: {
-        type: String,
-    },
     email: {
         type: String,
         required: true,
