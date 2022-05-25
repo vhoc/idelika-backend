@@ -5,20 +5,6 @@ const { generateAccessToken } = require( `../helpers/generateAccessToken` )
 
 const RefreshToken = require( `../models/refreshToken` )
 
-// Verify Token
-router.post( '/token', async ( request, response ) => {
-    const authHeader = request.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
-
-    if (token == null) return response.sendStatus(401)
-
-    jwt.verify( token, process.env.ACCESS_TOKEN_SECRET, (error, user) => {
-        if ( error ) return response.sendStatus(403)
-        request.user = user
-        next()
-    } )
-} )
-
 // Refresh Token
 router.post( '/refreshtoken', async ( request, response ) => {
     const refreshToken = request.body.refreshToken
@@ -48,9 +34,18 @@ router.delete( '/logout', async ( request, response ) => {
     
 } )
 
-// Acceso de usuario
-router.post( '/', ( request, response ) => {
-    response.send( `Acceder` )
+// Verify Token
+router.get( '/', ( request, response ) => {
+    const authHeader = request.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+
+    if (token == null) return response.sendStatus(401)
+
+    jwt.verify( token, process.env.ACCESS_TOKEN_SECRET, (error, user) => {
+        if ( error ) return response.sendStatus(403)
+        request.user = user
+        next()
+    } )
 } )
 
 module.exports = router;
