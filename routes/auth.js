@@ -8,8 +8,10 @@ const RefreshToken = require( `../models/refreshToken` )
 // Refresh Token
 router.post( '/refreshtoken', async ( request, response ) => {
     const refreshToken = request.body.refreshToken
+    // No token?
     if ( refreshToken == null ) return response.sendStatus( 401 )
 
+    // Expired or Wrong token?
     const savedToken = await RefreshToken.findOne( { refreshToken }, 'refreshToken' )
     if ( savedToken && refreshToken !== savedToken.refreshToken  ) return response.sendStatus( 403 )
 
@@ -22,7 +24,8 @@ router.post( '/refreshtoken', async ( request, response ) => {
 
 // Delete Token
 router.delete( '/logout', async ( request, response ) => {
-    const refreshToken = request.body.token
+    console.log(request.body)
+    const refreshToken = request.body.refreshToken
     if ( refreshToken == null ) return response.sendStatus( 401 )
 
     const savedToken = await RefreshToken.findOne( { refreshToken }, 'refreshToken' )
@@ -44,7 +47,7 @@ router.get( '/', ( request, response ) => {
     jwt.verify( token, process.env.ACCESS_TOKEN_SECRET, (error, user) => {
         if ( error ) return response.sendStatus(403)
         request.user = user
-        next()
+        return response.sendStatus(200)
     } )
 } )
 
