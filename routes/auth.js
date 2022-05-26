@@ -24,7 +24,7 @@ router.post( '/refreshtoken', async ( request, response ) => {
 
 // Delete Token
 router.delete( '/logout', async ( request, response ) => {
-    console.log(request.body)
+    //console.log(request.body)
     const refreshToken = request.body.refreshToken
     if ( refreshToken == null ) return response.sendStatus( 401 )
 
