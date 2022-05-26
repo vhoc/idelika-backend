@@ -47,8 +47,8 @@ router.post( '/', validateCreate, async ( request, response ) => {
     try {
         const salt = await bcrypt.genSalt()
         const hashedPassword = await bcrypt.hash( request.body.password, salt )
-        console.log(salt)
-        console.log(hashedPassword)
+        //console.log(salt)
+        //console.log(hashedPassword)
         const user = new Usuario({
             nombre: request.body.nombre,
             email: request.body.email,
@@ -58,8 +58,10 @@ router.post( '/', validateCreate, async ( request, response ) => {
         })
 
         await user.save()
+        console.log( `New user ${ request.body.email } registered.` )
         response.status(201).send()
-    } catch {
+    } catch ( error ) {
+        console.error( error )
         response.status(500).send()
     }
 } )
@@ -78,19 +80,22 @@ router.delete( '/:id', ( request, response ) => {
 router.post( '/login', async ( request, response ) => {
         const usuario = await Usuario.findOne( { email: request.body.email } )
         if( usuario == null ) return response.status(404).json( { status: 404, message: "No se encontró el usuario" } )
-        console.log( usuario.email )
-        // Generte token
+        
+    try {
+        if ( ! await bcrypt.compare( request.body.password, usuario.password ) ) {            
+            console.log( `Authentication FAILED for user ${ usuario.email } from ${ request.ip  }` )
+            return response.status(401).json( { status: 401, message: "Credenciales inválidas" } )
+        }
+        // Generate token
         const usuarioObject = { email: usuario.email }
         const accessToken = generateAccessToken( usuarioObject )
         const refreshToken = jwt.sign( usuarioObject, process.env.REFRESH_TOKEN_SECRET )
         RefreshToken.create( { refreshToken } )
-    try {
-        ! await bcrypt.compare( request.body.password, usuario.password ) ?
-            response.status(401).json( { status: 401, message: "Credenciales inválidas" } ) :
-        response.status(200).json( { status: 200, message: "Autenticación exitosa.", userId: usuario._id, email: usuario.email, nombre: usuario.nombre, empresa: usuario.empresa, activo: usuario.active, accessToken, refreshToken } )
-
+        console.log( `Authentication SUCCESSFUL for user ${ usuario.email } from ${ request.ip  }` )
+        return response.status(200).json( { status: 200, message: "Autenticación exitosa.", userId: usuario._id, email: usuario.email, nombre: usuario.nombre, empresa: usuario.empresa, activo: usuario.active, accessToken, refreshToken } )
     } catch (error) {
-        response.status(500).json( { status: 500, message: error } )
+        console.error( error )
+        return response.status(500).json( { status: 500, message: error } )
     }
 } )
 

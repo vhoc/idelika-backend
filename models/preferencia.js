@@ -3,47 +3,58 @@ const mongoose = require( `mongoose` )
 const preferenciaSchema = new mongoose.Schema({
     usuarioId: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
     },
-    lunes: {
+    monday: {
         type: Boolean,
         required: true,
         default: true,
     },
-    martes: {
+    tuesday: {
         type: Boolean,
         required: true,
         default: true,
     },
-    miercoles: {
+    wednesday: {
         type: Boolean,
         required: true,
         default: true,
     },
-    jueves: {
+    thursday: {
         type: Boolean,
         required: true,
         default: true,
     },
-    viernes: {
+    friday: {
         type: Boolean,
         required: true,
         default: true,
     },
-    sabado: {
+    saturday: {
         type: Boolean,
         required: true,
         default: false,
     },
-    domingo: {
+    sunday: {
         type: Boolean,
         required: true,
         default: false,
     },
     horaInicial: {
         type: String,
+        required: true,
+        default: '09:00',
     },
     horaFinal: {
+        type: String,
+        required: true,
+        default: '17:00',
+    },
+    horaInicialExcepcion: {
+        type: String,
+    },
+    horaFinalExcepcion: {
         type: String,
     },
 })

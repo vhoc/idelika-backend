@@ -32,7 +32,7 @@ const validateCreate = [
         .not().isEmpty().withMessage( `La confirmación de la contraseña no coincide con la contraseña.` )
         .isLength( { min: 6, max: 100 } ).withMessage( `La confirmación de la contraseña debe tener entre 6 y 100 caracteres.` )
         .custom( (value, {req}) => {
-            console.dir(req)
+            //console.dir(req)
             if ( value !== req.body.password ) {
                 throw new Error( 'La confirmación de la contraseña no coincide con la contraseña.' )
             }

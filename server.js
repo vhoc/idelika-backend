@@ -9,11 +9,15 @@ const express = require( "express" )
 const outlookAuthRouter = require('./routes/outlook-auth');
 const indexRouter = require( './routes/index' )
 const authRouter = require( `./routes/auth` )
+const userRouter = require( "./routes/usuarios" )
+
+const PreferenciaController = require( `./controllers/PreferenciaController` )
 
 
 const app = express()
 app.use( cors() )
 app.use( express.json() )
+app.set('trust proxy', true)
 
 // Session middleware
 // NOTE: Uses default in-memory session store, which is not
@@ -77,7 +81,6 @@ app.locals.msalClient = new msal.ConfidentialClientApplication(msalConfig);
 app.set('view engine', 'hbs');
 
 //const mongoose = require( 'mongoose' )
-const userRouter = require( "./routes/usuarios" )
 
 //mongoose.connect( process.env.DATABASE_URL, { useNewUrlParser: true } )
 //const db = mongoose.connection
@@ -91,6 +94,7 @@ app.use( express.json() )
 app.use( "/usuarios", userRouter )
 app.use( "/outlook-auth", outlookAuthRouter )
 app.use( `/auth`, authRouter )
+app.use( `/preferencias`, PreferenciaController )
 app.use( '/', indexRouter )
 
 app.listen( 5000, () => console.info( `West Telco Backend Started` ) )
