@@ -42,20 +42,20 @@ const preferenciaSchema = new mongoose.Schema({
         default: false,
     },
     horaInicial: {
-        type: String,
+        type: Date,
         required: true,
-        default: '09:00',
+        default: '1900-01-01T16:00:00.000Z',
     },
     horaFinal: {
-        type: String,
+        type: Date,
         required: true,
-        default: '17:00',
+        default: '1900-01-01T11:00:00.000Z',
     },
     horaInicialExcepcion: {
-        type: String,
+        type: Date,
     },
     horaFinalExcepcion: {
-        type: String,
+        type: Date,
     },
 })
 

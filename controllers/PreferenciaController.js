@@ -3,6 +3,11 @@ const router = express.Router()
 const Preferencias = require( `../models/preferencia` )
 const Usuario = require( `../models/usuario` )
 
+/**
+ * TOOD:
+ * Protect these routes with JWT
+ */
+
 // Get ONE
 router.get( `/:usuarioId`, async (request, response) => {
 
@@ -21,8 +26,8 @@ router.post( `/`, async (request, response) => {
 
     try {
         // VALIDATE USER FIRST!!!
-        const usuario = await Usuario.findOne( { _id: request.body.usuarioId } )
-        if ( ! usuario ) return response.status(404).json( { status: 404, message: "No se encontró el usuario de cuya configuración se intentó obtener." } )
+        //const usuario = await Usuario.findOne( { _id: request.body.usuarioId } )
+        //if ( ! usuario ) return response.status(404).json( { status: 404, message: "No se encontró el usuario de cuya configuración se intentó obtener." } )
         
         await Preferencias.findOneAndUpdate( { usuarioId: request.body.usuarioId }, request.body, { upsert: true } )
 
