@@ -2,6 +2,7 @@ require( 'dotenv' ).config()
 const session = require('express-session');
 const flash = require('connect-flash');
 const msal = require("@azure/msal-node");
+const connection = require( `./db` )
 
 const cors = require( `cors` )
 const express = require( "express" )
@@ -13,11 +14,12 @@ const userRouter = require( "./routes/usuarios" )
 
 const PreferenciaController = require( `./controllers/PreferenciaController` )
 
-
 const app = express()
 app.use( cors() )
 app.use( express.json() )
 app.set('trust proxy', true)
+
+connection()
 
 // Session middleware
 // NOTE: Uses default in-memory session store, which is not

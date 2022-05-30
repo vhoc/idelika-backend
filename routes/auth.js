@@ -51,4 +51,14 @@ router.get( '/', ( request, response ) => {
     } )
 } )
 
+// Password Reset STEP 1 - Send link to user
+router.post( '/password-reset', ( request, response ) => {
+
+} )
+
+// Password Reset SETP 2 - Reset user password\
+router.post( 'password-reset/:usuarioId/:token', ( request, response ) => {
+
+} )
+
 module.exports = router;

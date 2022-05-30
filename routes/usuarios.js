@@ -4,17 +4,17 @@ const router = express.Router()
 const Usuario = require( `../models/usuario` )
 const Preferencias = require( `../models/preferencia` )
 const bcrypt = require( 'bcrypt' )
-const mongoose = require('mongoose')
+//const mongoose = require('mongoose')
 const { validateCreate } = require( '../validators/usuarios' )
 const { generateAccessToken } = require( '../helpers/generateAccessToken' )
 const RefreshToken = require( `../models/refreshToken` )
 const jwt = require( `jsonwebtoken` )
-
+/*
 mongoose.connect( process.env.DATABASE_URL, () => {
     console.log( "Connected to database" )
 }, error => {
     console.error( error )
-} )
+} )*/
 /** 
  * Always place static routes first, then dynamic routes last.
  */
