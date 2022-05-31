@@ -7,6 +7,7 @@ const Token = require( `../models/token` )
 const crypto = require( `crypto` )
 const Joi = require( `joi` )
 const sendEmail = require( `../helpers/sendEmail` )
+const bcrypt = require( 'bcrypt' )
 
 const RefreshToken = require( `../models/refreshToken` )
 
@@ -86,7 +87,7 @@ router.post( '/password-reset', async ( req, res ) => {
 } )
 
 // Password Reset SETP 2 - Reset user password\
-router.post( 'password-reset/:usuarioId/:token', async ( req, res ) => {
+router.post( "/password-reset/:usuarioId/:token", async ( req, res ) => {
     try {
         const schema = Joi.object({ password: Joi.string().required() });
         const { error } = schema.validate(req.body);
@@ -101,7 +102,10 @@ router.post( 'password-reset/:usuarioId/:token', async ( req, res ) => {
         });
         if (!token) return res.status(400).send("Invalid link or expired");
 
-        user.password = req.body.password;
+        const salt = await bcrypt.genSalt()
+        const hashedPassword = await bcrypt.hash( req.body.password, salt )
+
+        user.password = hashedPassword;
         await user.save();
         await token.delete();
 
