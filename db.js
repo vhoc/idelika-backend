@@ -4,7 +4,6 @@ module.exports = connection = async () => {
     try {
         const connectionParams = {
             useNewUrlParser: true,
-            useCreateIndex: true,
             useUnifiedTopology: true,
         }
         await mongoose.connect( process.env.DATABASE_URL, connectionParams )
