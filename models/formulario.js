@@ -1,11 +1,22 @@
 const mongoose = require( `mongoose` )
 
+/**
+ * Pendientes campos multiopción
+ */
+
 const camposSchema = new mongoose.Schema({
+    tipoCampo: { type: String },
     titulo: { type: String, },
-    tipo: { type: String, }
+    tipo: { type: String, },
+    inputId: { type: String }
 })
 
 const formularioSchema = new mongoose.Schema({
+    usuarioId: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     logotipo: {
         type: String,
     },
@@ -23,11 +34,11 @@ const formularioSchema = new mongoose.Schema({
         type: [camposSchema],
         required: true,
         default: [
-            { titulo: "Nombre", tipo: "text", },
-            { titulo: "Apellido Paterno", tipo: "text", },
-            { titulo: "Apellido Materno", tipo: "text", },
-            { titulo: "Correo Electrónico", tipo: "email", },
-            { titulo: "Asunto de la Reunión", tipo: "textarea", },
+            { titulo: "Nombre", tipo: "text", id: "nombre", },
+            { titulo: "Apellido Paterno", tipo: "text", id: "aPaterno", },
+            { titulo: "Apellido Materno", tipo: "text", id: "aMaterno", },
+            { titulo: "Correo Electrónico", tipo: "email", id: "email", },
+            { titulo: "Asunto de la Reunión", tipo: "textarea", id: "asunto", },
         ],
     },
     camposAdicionales: {
@@ -37,12 +48,7 @@ const formularioSchema = new mongoose.Schema({
         type: String,
         required: true,
         default: 'Gracias por agendar una cita.'
-    },
-    botonConfirmar: {
-        type: String,
-        required: true,
-        default : '#',
-    },
+    }
 })
 
 module.exports = mongoose.model( `Formulario`, formularioSchema, 'formularios' )

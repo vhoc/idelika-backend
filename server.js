@@ -13,6 +13,7 @@ const authRouter = require( `./routes/auth` )
 const userRouter = require( "./routes/usuarios" )
 
 const PreferenciaController = require( `./controllers/PreferenciaController` )
+const FormularioController = require( `./controllers/FormularioController` )
 
 const app = express()
 app.use( cors() )
@@ -82,12 +83,6 @@ app.locals.msalClient = new msal.ConfidentialClientApplication(msalConfig);
 
 app.set('view engine', 'hbs');
 
-//const mongoose = require( 'mongoose' )
-
-//mongoose.connect( process.env.DATABASE_URL, { useNewUrlParser: true } )
-//const db = mongoose.connection
-//db.on( 'error', error => console.error( error ) )
-//db.once( 'open', () => console.log( `Connected to database.` ) )
 
 app.use( express.static( 'public' ) )
 app.use( express.urlencoded( { encoded: true } ) )
@@ -97,6 +92,7 @@ app.use( "/usuarios", userRouter )
 app.use( "/outlook-auth", outlookAuthRouter )
 app.use( `/auth`, authRouter )
 app.use( `/preferencias`, PreferenciaController )
+app.use( `/formularios`, FormularioController )
 app.use( '/', indexRouter )
 
 app.listen( 5000, () => console.info( `West Telco Backend Started` ) )
