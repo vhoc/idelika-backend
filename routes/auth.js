@@ -10,6 +10,12 @@ const sendEmail = require( `../helpers/sendEmail` )
 const bcrypt = require( 'bcrypt' )
 
 const RefreshToken = require( `../models/refreshToken` )
+const { validatePassword } = require( '../validators/usuarios' )
+
+/**
+ * TODO:
+ * Change responses to JSON responses in reset-password methods.
+ */
 
 // Refresh Token
 router.post( '/refreshtoken', async ( request, response ) => {
@@ -113,6 +119,36 @@ router.post( "/password-reset/:usuarioId/:token", async ( req, res ) => {
     } catch (error) {
         res.send("An error occured");
         console.log(error);
+    }
+} )
+
+// Password Change
+// TODO: Validar contraseña (longitud)
+router.post( "/password-change/:usuarioId", validatePassword, async ( request, response ) => {
+    try {
+        const schema = Joi.object({
+            currentPassword: Joi.string().required(),
+            newPassword: Joi.string().required(),
+            newPasswordConfirmation: Joi.string().required()
+        })
+        const { error } = schema.validate( request.body )
+        if( error ) return response.status(400).json( { status: 400, message: error.details[0].message } )
+
+        const user = await Usuario.findById( request.params.usuarioId )
+        if ( !user ) return response.status(404).json( { status: 404, message: "No se encontró el usuario especificado." } )
+
+        if ( ! await bcrypt.compare( request.body.currentPassword, user.password ) ) {
+            return response.status(401).json( { status: 401, message: "Credenciales inválidas" } )
+        }
+
+        const salt = await bcrypt.genSalt()
+        const hashedPassword = await bcrypt.hash( request.body.newPassword, salt )
+        user.password = hashedPassword;
+        await user.save();
+
+        response.status(200).json( { status: 200, message: "La contraseña ha sido cambiada exitosamente." } )
+    } catch ( error ) {
+        response.status(500).json( { status: 500, message: error.details[0].message } )
     }
 } )
 

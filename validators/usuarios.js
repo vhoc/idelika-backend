@@ -37,7 +37,7 @@ const validateCreate = [
                 throw new Error( 'La confirmación de la contraseña no coincide con la contraseña.' )
             }
             return true
-        } ),
+    } ),
         
     ( request, response, next ) => {
         validateResult( request, response, next )
@@ -45,4 +45,26 @@ const validateCreate = [
 
 ]
 
-module.exports = { validateCreate }
+const validatePassword = [
+    check( 'newPassword' )
+        .exists({ checkFalsy: true }).withMessage( `Se requiere definir una contraseña.` )
+        .not().isEmpty().withMessage( `La contraseña no puede estar en blanco.` )
+        .isLength( { min: 6, max: 100 } ).withMessage( `La contraseña debe tener entre 6 y 100 caracteres.` ),
+
+    check( 'newPasswordConfirmation' )
+        .exists({ checkFalsy: true }).withMessage( `Se requiere confirmar la contraseña.` )
+        .not().isEmpty().withMessage( `La confirmación de la contraseña no coincide con la contraseña.` )
+        .isLength( { min: 6, max: 100 } ).withMessage( `La confirmación de la contraseña debe tener entre 6 y 100 caracteres.` )
+        .custom( (value, {req}) => {
+            //console.dir(req)
+            if ( value !== req.body.newPassword ) {
+                throw new Error( 'La confirmación de la contraseña no coincide con la contraseña.' )
+            }
+            return true
+        } ),
+    ( request, response, next ) => {
+        validateResult( request, response, next )
+    }
+]
+
+module.exports = { validateCreate, validatePassword }
