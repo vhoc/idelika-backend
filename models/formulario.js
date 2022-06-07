@@ -19,6 +19,7 @@ const formularioSchema = new mongoose.Schema({
     },
     logotipo: {
         type: String,
+        default: "https://via.placeholder.com/170x60.png?text=SUBA+UN+LOGO",
     },
     titulo: {
         type: String,
@@ -34,11 +35,11 @@ const formularioSchema = new mongoose.Schema({
         type: [camposSchema],
         required: true,
         default: [
-            { titulo: "Nombre", tipo: "text", id: "nombre", },
-            { titulo: "Apellido Paterno", tipo: "text", id: "aPaterno", },
-            { titulo: "Apellido Materno", tipo: "text", id: "aMaterno", },
-            { titulo: "Correo Electrónico", tipo: "email", id: "email", },
-            { titulo: "Asunto de la Reunión", tipo: "textarea", id: "asunto", },
+            { titulo: "Nombre", tipo: "text", inputId: "nombre", },
+            { titulo: "Apellido Paterno", tipo: "text", inputId: "aPaterno", },
+            { titulo: "Apellido Materno", tipo: "text", inputId: "aMaterno", },
+            { titulo: "Correo Electrónico", tipo: "email", inputId: "email", },
+            { titulo: "Asunto de la Reunión", tipo: "textarea", inputId: "asunto", },
         ],
     },
     camposAdicionales: {

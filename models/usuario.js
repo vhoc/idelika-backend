@@ -24,6 +24,13 @@ const usuarioSchema = new mongoose.Schema({
     },
     empresa: {
         type: String,
+        required: true,
+        unique: true,
+    },
+    buttonLink: {
+        type: String,
+        required: true,
+        unique: true,
     },
     avatar: {
         type: String,

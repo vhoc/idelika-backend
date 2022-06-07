@@ -127,9 +127,9 @@ router.post( "/password-reset/:usuarioId/:token", async ( req, res ) => {
 router.post( "/password-change/:usuarioId", validatePassword, async ( request, response ) => {
     try {
         const schema = Joi.object({
-            currentPassword: Joi.string().required(),
-            newPassword: Joi.string().required(),
-            newPasswordConfirmation: Joi.string().required()
+            input: Joi.string().required(),
+            password: Joi.string().required(),
+            confirmPassword: Joi.string().required()
         })
         const { error } = schema.validate( request.body )
         if( error ) return response.status(400).json( { status: 400, message: error.details[0].message } )
@@ -137,12 +137,12 @@ router.post( "/password-change/:usuarioId", validatePassword, async ( request, r
         const user = await Usuario.findById( request.params.usuarioId )
         if ( !user ) return response.status(404).json( { status: 404, message: "No se encontró el usuario especificado." } )
 
-        if ( ! await bcrypt.compare( request.body.currentPassword, user.password ) ) {
+        if ( ! await bcrypt.compare( request.body.input, user.password ) ) {
             return response.status(401).json( { status: 401, message: "Credenciales inválidas" } )
         }
 
         const salt = await bcrypt.genSalt()
-        const hashedPassword = await bcrypt.hash( request.body.newPassword, salt )
+        const hashedPassword = await bcrypt.hash( request.body.password, salt )
         user.password = hashedPassword;
         await user.save();
 

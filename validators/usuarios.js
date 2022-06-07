@@ -46,18 +46,18 @@ const validateCreate = [
 ]
 
 const validatePassword = [
-    check( 'newPassword' )
+    check( 'password' )
         .exists({ checkFalsy: true }).withMessage( `Se requiere definir una contraseña.` )
         .not().isEmpty().withMessage( `La contraseña no puede estar en blanco.` )
         .isLength( { min: 6, max: 100 } ).withMessage( `La contraseña debe tener entre 6 y 100 caracteres.` ),
 
-    check( 'newPasswordConfirmation' )
+    check( 'confirmPassword' )
         .exists({ checkFalsy: true }).withMessage( `Se requiere confirmar la contraseña.` )
         .not().isEmpty().withMessage( `La confirmación de la contraseña no coincide con la contraseña.` )
         .isLength( { min: 6, max: 100 } ).withMessage( `La confirmación de la contraseña debe tener entre 6 y 100 caracteres.` )
         .custom( (value, {req}) => {
             //console.dir(req)
-            if ( value !== req.body.newPassword ) {
+            if ( value !== req.body.password ) {
                 throw new Error( 'La confirmación de la contraseña no coincide con la contraseña.' )
             }
             return true

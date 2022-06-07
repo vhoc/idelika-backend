@@ -3,6 +3,7 @@ const express = require( 'express' )
 const router = express.Router()
 const Usuario = require( `../models/usuario` )
 const Preferencias = require( `../models/preferencia` )
+const Formularios = require( `../models/formulario` )
 const bcrypt = require( 'bcrypt' )
 //const mongoose = require('mongoose')
 const { validateCreate } = require( '../validators/usuarios' )
@@ -55,14 +56,22 @@ router.post( '/', validateCreate, async ( request, response ) => {
             email: request.body.email,
             password: hashedPassword,
             empresa: request.body.empresa,
+            buttonLink: request.body.buttonLink,
             active: true,
         })
         await user.save()
 
+        // Create default preferences
         const preference = new Preferencias({
             usuarioId: user._id,
         })
         await preference.save()
+
+        // Create default form
+        const form = new Formularios({
+            usuarioId: user._id,
+        })
+        await form.save()
         
         console.log( `New user ${ request.body.email } registered.` )
         response.status(201).send()

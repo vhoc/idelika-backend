@@ -1,6 +1,25 @@
 const express = require( 'express' )
 const router = express.Router()
 const Formulario = require( `../models/formulario` )
+const multer = require( `multer` )
+const path = require( `path` )
+const fs = require( `fs` )
+
+const storagePath = `/var/www/zss-frontend/upload`
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, storagePath)
+    },
+    filename: (req, file, cb) => {
+        //console.dir( req, null, { depth: null } )
+        //console.log( `req.usuarioId: ${ req.body.usuarioId }` )
+        //console.log(file)
+        cb(null, req.body.usuarioId + '_' + Date.now() + path.extname( file.originalname ) )
+    }
+})
+
+const upload = multer({ storage: storage })
 
 /**
  * TODO:
@@ -37,5 +56,23 @@ router.post( `/`, async (request, response) => {
     }
 
 })
+
+// Upload Logo Image
+router.post( `/logo`, upload.single(`file`), async (request, response) => {
+    try {
+        const previousFileFullPath = request.body.currentFile
+        const previousFileName = previousFileFullPath.substring( previousFileFullPath.lastIndexOf( '/' ) + 1 )
+        fs.unlink( `${ storagePath }/${ previousFileName }`, error => {
+            console.log( error )
+        } )
+        const formulario = await Formulario.findOne( { usuarioId: request.body.usuarioId } )
+        formulario.logotipo = `${ process.env.FRONTEND_URL }uploads/${ request.file.filename }`
+        formulario.save()
+        return response.status(200).json( { status: 200, message: 'Image uploaded.', imageUrl: formulario.logotipo } )
+    } catch ( error ) {
+        return response.status(500).json( { status: 500, message: error.message } )
+    }
+} )
+
 
 module.exports = router;
