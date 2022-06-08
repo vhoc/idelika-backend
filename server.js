@@ -14,6 +14,7 @@ const userRouter = require( "./routes/usuarios" )
 
 const PreferenciaController = require( `./controllers/PreferenciaController` )
 const FormularioController = require( `./controllers/FormularioController` )
+const LicenseKeyController = require( `./controllers/LicenseKeyController` )
 
 const app = express()
 app.use( cors() )
@@ -93,6 +94,7 @@ app.use( "/outlook-auth", outlookAuthRouter )
 app.use( `/auth`, authRouter )
 app.use( `/preferencias`, PreferenciaController )
 app.use( `/formularios`, FormularioController )
+app.use( `/licencias`, LicenseKeyController )
 app.use( '/', indexRouter )
 
 app.listen( 5000, () => console.info( `West Telco Backend Started` ) )
