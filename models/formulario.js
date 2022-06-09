@@ -13,7 +13,7 @@ const camposSchema = new mongoose.Schema({
 
 const formularioSchema = new mongoose.Schema({
     usuarioId: {
-        type: String,
+        type: Number,
         required: true,
         unique: true,
     },

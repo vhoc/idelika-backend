@@ -2,7 +2,7 @@ const mongoose = require( `mongoose` )
 
 const preferenciaSchema = new mongoose.Schema({
     usuarioId: {
-        type: String,
+        type: Number,
         required: true,
         unique: true,
     },

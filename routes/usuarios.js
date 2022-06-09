@@ -2,14 +2,16 @@ const express = require( 'express' )
 //const res = require('express/lib/response')
 const router = express.Router()
 const Usuario = require( `../models/usuario` )
+const LicenseKey = require( `../models/licenseKey` )
 const Preferencias = require( `../models/preferencia` )
 const Formularios = require( `../models/formulario` )
 const bcrypt = require( 'bcrypt' )
 //const mongoose = require('mongoose')
-const { validateCreate } = require( '../validators/usuarios' )
+const { validateCreate, validatePassword, validateLicenseKey } = require( '../validators/usuarios' )
 const { generateAccessToken } = require( '../helpers/generateAccessToken' )
 const RefreshToken = require( `../models/refreshToken` )
 const jwt = require( `jsonwebtoken` )
+const { removeDiacritics } = require( `../helpers/stringTools` )
 /*
 mongoose.connect( process.env.DATABASE_URL, () => {
     console.log( "Connected to database" )
@@ -36,30 +38,33 @@ router.get( '/', async ( request, response ) => {
 router.get( '/:id', ( request, response ) => {
     response.send( `Get one user: ${ request.params.id }` )
 } )
-/***
- * cuando se genere una cuenta
- * llaves del api, jalar a los usuarios
- * y comparar con el usuario
- * los usuarios estaran en una base de datos
- * crear un servicio en background que este actualizando la lista de usuarios en la db.
- */
-// Create one
-router.post( '/', validateCreate, async ( request, response ) => {
-        //if( !errors.isEmpty() ) return response.status(400).json( { errors: errors.array() } )
+
+// REGISTRATION
+router.post( '/', [validateCreate, validatePassword, validateLicenseKey], async ( request, response ) => {
+    
     try {
+
         const salt = await bcrypt.genSalt()
         const hashedPassword = await bcrypt.hash( request.body.password, salt )
-        //console.log(salt)
-        //console.log(hashedPassword)
+
+        // Substract one available user from the license
+        const license = await LicenseKey.findOne( { key: request.body.licenseKey } )
+        license.usersAvailable = license.usersAvailable - 1,
+        await license.save()
+
         const user = new Usuario({
             nombre: request.body.nombre,
             email: request.body.email,
             password: hashedPassword,
-            empresa: request.body.empresa,
-            buttonLink: request.body.buttonLink,
-            active: true,
+            empresa: license.empresa,
+            licenseKey: license.key,
+            buttonLink: 'tmp',
+            active: false,
         })
         await user.save()
+
+        user.buttonLink = `${process.env.FRONTEND_URL}solicitud/?uid=${user._id}`
+        user.save()
 
         // Create default preferences
         const preference = new Preferencias({
@@ -72,12 +77,14 @@ router.post( '/', validateCreate, async ( request, response ) => {
             usuarioId: user._id,
         })
         await form.save()
+
+        
         
         console.log( `New user ${ request.body.email } registered.` )
-        response.status(201).send()
+        return response.status(201).json( { status: 201, message: "Gracias por registrarte. En breve recibirás un correo electrónico con un enlace de activación que deberás visitar para comenzar a usar tu cuenta." } )
     } catch ( error ) {
         console.error( error )
-        response.status(500).send()
+        return response.status(500).json( { status: 500, message: "Ha ocurrido un error al intentar el registro." } )
     }
 } )
 
@@ -95,6 +102,7 @@ router.delete( '/:id', ( request, response ) => {
 router.post( '/login', async ( request, response ) => {
         const usuario = await Usuario.findOne( { email: request.body.email } )
         if( usuario == null ) return response.status(404).json( { status: 404, message: "No se encontró el usuario" } )
+        if( usuario.active === false ) return response.status(403).json( { status: 403, message: "Es necesario activar su cuenta desde el correo de activación que le enviamos." } )
         
     try {
         if ( ! await bcrypt.compare( request.body.password, usuario.password ) ) {            
@@ -107,7 +115,7 @@ router.post( '/login', async ( request, response ) => {
         const refreshToken = jwt.sign( usuarioObject, process.env.REFRESH_TOKEN_SECRET )
         RefreshToken.create( { refreshToken } )
         console.log( `Authentication SUCCESSFUL for user ${ usuario.email } from ${ request.ip  }` )
-        return response.status(200).json( { status: 200, message: "Autenticación exitosa.", userId: usuario._id, email: usuario.email, nombre: usuario.nombre, empresa: usuario.empresa, activo: usuario.active, accessToken, refreshToken } )
+        return response.status(200).json( { status: 200, message: "Autenticación exitosa.", userId: usuario._id, email: usuario.email, nombre: usuario.nombre, empresa: usuario.empresa, buttonLink: usuario.buttonLink, activo: usuario.active, accessToken, refreshToken } )
     } catch (error) {
         console.error( error )
         return response.status(500).json( { status: 500, message: error } )

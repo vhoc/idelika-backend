@@ -9,22 +9,14 @@ const licenseKeySchema = new mongoose.Schema({
         },
         required: true,
     },
-    usuarioId: {
+    empresa: {
         type: String,
         default: '',
     },
-    usuarioNombre: {
-        type: String,
-        default: '',
+    usersAvailable: {
+        type: Number,
+        default: 0
     },
-    usuarioEmpresa: {
-        type: String,
-        default: '',
-    },
-    asignada: {
-        type: Boolean,
-        default: false,
-    }
 })
 
 module.exports = mongoose.model( `LicenseKey`, licenseKeySchema, `licenseKeys` )
