@@ -10,7 +10,7 @@ const generateActivationLink = async ( usuario ) => {
         }).save();
     }
 
-    const link = `${process.env.BASE_URL}/auth/activate/${usuario._id}/${token.token}`;
+    const link = `${process.env.FRONTEND_URL}proxy/auth/activate/${usuario._id}/${token.token}`;
     // TODO: CREAR RUTA /activate/
     return link
 }
