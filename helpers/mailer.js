@@ -34,6 +34,7 @@ const registrationMail = async ( address, usuario ) => {
     }
 
     transporter.sendMail(mailOptions, ( error, info ) => {
+        console.log( `Sengind activation e-mail to ${ address }` )
         error ? console.log(error) : console.log( `Activation e-mail sent. ${ info.response }` )
     })
 
