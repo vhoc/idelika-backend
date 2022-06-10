@@ -152,4 +152,33 @@ router.post( "/password-change/:usuarioId", validatePassword, async ( request, r
     }
 } )
 
+// Account Activation
+router.get( `/activate/:usuarioId/:token`, async ( request, response ) => {
+    try {
+        const user = await Usuario.findById( request.params.usuarioId )
+        if ( !user ) {
+            console.log( `Invalid activation token received` )
+            return response.redirect( `${ process.env.FRONTEND_URL }activacion?status=invalid` )
+        }
+
+        const token = await Token.findOne({
+            usuarioId: user._id,
+            token: request.params.token,
+        })
+        if ( !token ) {
+            console.log( `Invalid activation token received` )
+             return response.redirect( `${ process.env.FRONTEND_URL }activacion?status=invalid` )
+        }
+        console.log( `Valid activation token. Activating user!` )
+        // Change active user flag to true
+        user.active = true
+        user.save()
+        token.delete()
+        return response.redirect( `${ process.env.FRONTEND_URL }activacion?status=valid` )
+    } catch ( error ) {
+        console.log( error )
+        return response.send( `Ha ocurrido un error.` )
+    }
+} )
+
 module.exports = router;

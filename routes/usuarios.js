@@ -1,26 +1,15 @@
 const express = require( 'express' )
-//const res = require('express/lib/response')
 const router = express.Router()
 const Usuario = require( `../models/usuario` )
 const LicenseKey = require( `../models/licenseKey` )
 const Preferencias = require( `../models/preferencia` )
 const Formularios = require( `../models/formulario` )
 const bcrypt = require( 'bcrypt' )
-//const mongoose = require('mongoose')
 const { validateCreate, validatePassword, validateLicenseKey } = require( '../validators/usuarios' )
 const { generateAccessToken } = require( '../helpers/generateAccessToken' )
 const RefreshToken = require( `../models/refreshToken` )
 const jwt = require( `jsonwebtoken` )
-const { removeDiacritics } = require( `../helpers/stringTools` )
-/*
-mongoose.connect( process.env.DATABASE_URL, () => {
-    console.log( "Connected to database" )
-}, error => {
-    console.error( error )
-} )*/
-/** 
- * Always place static routes first, then dynamic routes last.
- */
+const { registrationMail } = require( `../helpers/mailer` )
 
 // Get all
 router.get( '/', async ( request, response ) => {
@@ -67,6 +56,7 @@ router.post( '/', [validateCreate, validatePassword, validateLicenseKey], async 
         user.save()
 
         // Create default preferences
+        /*
         const preference = new Preferencias({
             usuarioId: user._id,
         })
@@ -77,8 +67,8 @@ router.post( '/', [validateCreate, validatePassword, validateLicenseKey], async 
             usuarioId: user._id,
         })
         await form.save()
-
-        
+        */
+        registrationMail( request.body.email, user )
         
         console.log( `New user ${ request.body.email } registered.` )
         return response.status(201).json( { status: 201, message: "Gracias por registrarte. En breve recibirás un correo electrónico con un enlace de activación que deberás visitar para comenzar a usar tu cuenta." } )
