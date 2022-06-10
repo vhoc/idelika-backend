@@ -56,7 +56,7 @@ router.post( '/', [validateCreate, validatePassword, validateLicenseKey], async 
         user.save()
 
         // Create default preferences
-        /*
+        
         const preference = new Preferencias({
             usuarioId: user._id,
         })
@@ -67,7 +67,7 @@ router.post( '/', [validateCreate, validatePassword, validateLicenseKey], async 
             usuarioId: user._id,
         })
         await form.save()
-        */
+        
         registrationMail( request.body.email, user )
         
         console.log( `New user ${ request.body.email } registered.` )
