@@ -5,7 +5,7 @@ const multer = require( `multer` )
 const path = require( `path` )
 const fs = require( `fs` )
 
-const storagePath = `/var/www/zss-frontend/upload`
+const storagePath = process.env.UPLOADS_PATH
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
