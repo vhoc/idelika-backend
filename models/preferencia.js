@@ -44,12 +44,18 @@ const preferenciaSchema = new mongoose.Schema({
     horaInicial: {
         type: Date,
         required: true,
-        default: '1900-01-01T16:00:00.000Z',
+        default: () => { 
+            const date = new Date( Date.now() )
+            return date.setHours( 9, 0, 0 )
+        },
     },
     horaFinal: {
         type: Date,
         required: true,
-        default: '1900-01-01T11:00:00.000Z',
+        default: () => { 
+            const date = new Date( Date.now() )
+            return date.setHours( 17, 0, 0 )
+        },
     },
     horaInicialExcepcion: {
         type: Date,
