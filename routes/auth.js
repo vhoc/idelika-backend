@@ -6,8 +6,8 @@ const Usuario = require( `../models/usuario` )
 const Token = require( `../models/token` )
 const crypto = require( `crypto` )
 const Joi = require( `joi` )
-const sendEmail = require( `../helpers/sendEmail` )
 const bcrypt = require( 'bcrypt' )
+const { passResetMail } = require( `../helpers/mailer` )
 
 const RefreshToken = require( `../models/refreshToken` )
 const { validatePassword } = require( '../validators/usuarios' )
@@ -82,8 +82,8 @@ router.post( '/password-reset', async ( req, res ) => {
             }).save();
         }
 
-        const link = `${process.env.BASE_URL}/password-reset/${user._id}/${token.token}`;
-        await sendEmail(user.email, "Password reset", link);
+        const link = `${process.env.FRONTEND_URL}recover-account/${user._id}/${token.token}?email=${ user.email }`;
+        await passResetMail(user.email, user, link);
 
         res.send("password reset link sent to your email account");
     } catch (error) {
@@ -129,7 +129,7 @@ router.post( "/password-change/:usuarioId", validatePassword, async ( request, r
         const schema = Joi.object({
             input: Joi.string().required(),
             password: Joi.string().required(),
-            confirmPassword: Joi.string().required()
+            passwordConfirmation: Joi.string().required()
         })
         const { error } = schema.validate( request.body )
         if( error ) return response.status(400).json( { status: 400, message: error.details[0].message } )
