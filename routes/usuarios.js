@@ -31,13 +31,24 @@ router.get( '/:id', async ( request, response ) => {
         const formulario = await Formularios.findOne( { usuarioId: request.params.id } )
         const preferencias = await Preferencias.findOne( { usuarioId: request.params.id } )
 
+        const usuarioObject = { email: usuario.email }
+        const accessToken = generateAccessToken( usuarioObject )
+        const refreshToken = jwt.sign( usuarioObject, process.env.REFRESH_TOKEN_SECRET )
+        RefreshToken.create( { refreshToken } )
+
         return response.status( 200 ).json( {
-            id: usuario._id,
+            userId: usuario._id,
             nombre: usuario.nombre,
             email: usuario.email,
             empresa: usuario.empresa,
+            buttonLink: usuario.buttonLink,
+            active: usuario.active,            
+            accessToken,
+            refreshToken,
+            zoom: usuario.zoom,
+            outlook: usuario.outlook,
             formulario,
-            preferencias
+            preferencias,
         } )
     } catch ( error ) {
         return response.status( 500 ).json( { status: 500, message: error.message } )
@@ -121,7 +132,20 @@ router.post( '/login', async ( request, response ) => {
         const refreshToken = jwt.sign( usuarioObject, process.env.REFRESH_TOKEN_SECRET )
         RefreshToken.create( { refreshToken } )
         console.log( `Authentication SUCCESSFUL for user ${ usuario.email } from ${ request.ip  }` )
-        return response.status(200).json( { status: 200, message: "Autenticación exitosa.", userId: usuario._id, email: usuario.email, nombre: usuario.nombre, empresa: usuario.empresa, buttonLink: usuario.buttonLink, activo: usuario.active, accessToken, refreshToken } )
+        return response.status(200).json( {
+            status: 200,
+            message: "Autenticación exitosa.",
+            userId: usuario._id,
+            email: usuario.email,
+            nombre: usuario.nombre,
+            empresa: usuario.empresa,
+            buttonLink: usuario.buttonLink,
+            active: usuario.active,
+            accessToken,
+            refreshToken,
+            zoom: usuario.zoom,
+            outlook: usuario.outlook,
+        } )
     } catch (error) {
         console.error( error )
         return response.status(500).json( { status: 500, message: error } )

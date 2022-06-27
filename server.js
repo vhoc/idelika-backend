@@ -99,4 +99,7 @@ app.use( `/licencias`, LicenseKeyController )
 app.use( `/zoom`, ZoomController )
 app.use( '/', indexRouter )
 
+// Cron tasks
+
+
 app.listen( 5000, () => console.info( `West Telco Backend Started` ) )

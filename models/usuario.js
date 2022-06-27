@@ -30,6 +30,22 @@ const usuarioSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    refreshTokenZoom: {
+        type: String,
+        default: '',
+    },
+    refreshTokenOutlook: {
+        type: String,
+        default: '',
+    },
+    zoom: {
+        type: Boolean,
+        default: false,
+    },
+    outlook: {
+        type: Boolean,
+        default: false,
+    },
     avatar: {
         type: String,
     },
