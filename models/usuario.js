@@ -24,6 +24,12 @@ const usuarioSchema = new mongoose.Schema({
         required: true,
         enum: ['Arquitecto', 'Interiorista', 'Otro'],
     },
+    tier: {
+        type: Number,
+        required: true,
+        default: 0,
+        enum: [0, 1, 2, 3, 4, 5],
+    },
     active: {
         type: Boolean,
         required: true,
