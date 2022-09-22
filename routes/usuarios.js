@@ -1,11 +1,11 @@
 const express = require( 'express' )
 const router = express.Router()
 const Usuario = require( `../models/usuario` )
-const LicenseKey = require( `../models/licenseKey` )
-const Preferencias = require( `../models/preferencia` )
-const Formularios = require( `../models/formulario` )
+//const LicenseKey = require( `../models/licenseKey` )
+//const Preferencias = require( `../models/preferencia` )
+//const Formularios = require( `../models/formulario` )
 const bcrypt = require( 'bcrypt' )
-const { validateCreate, validatePassword, validateLicenseKey } = require( '../validators/usuarios' )
+const { validateCreate, validatePassword } = require( '../validators/usuarios' )
 const { generateAccessToken } = require( '../helpers/generateAccessToken' )
 const RefreshToken = require( `../models/refreshToken` )
 const jwt = require( `jsonwebtoken` )
@@ -28,16 +28,16 @@ router.get( '/:id', async ( request, response ) => {
     //response.send( `Get one user: ${ request.params.id }` )
     try {
         const usuario = await Usuario.findById( request.params.id )
-        const formulario = await Formularios.findOne( { usuarioId: request.params.id } )
-        const preferencias = await Preferencias.findOne( { usuarioId: request.params.id } )
+        //const formulario = await Formularios.findOne( { usuarioId: request.params.id } )
+        //const preferencias = await Preferencias.findOne( { usuarioId: request.params.id } )
 
         return response.status( 200 ).json( {
             id: usuario._id,
             nombre: usuario.nombre,
             email: usuario.email,
-            empresa: usuario.empresa,
-            formulario,
-            preferencias
+            //empresa: usuario.empresa,
+            //formulario,
+            //preferencias
         } )
     } catch ( error ) {
         return response.status( 500 ).json( { status: 500, message: error.message } )
@@ -45,44 +45,45 @@ router.get( '/:id', async ( request, response ) => {
 } )
 
 // REGISTRATION
-router.post( '/', [validateCreate, validatePassword, validateLicenseKey], async ( request, response ) => {
+router.post( '/', [validateCreate, validatePassword], async ( request, response ) => {
     
     try {
-
         const salt = await bcrypt.genSalt()
         const hashedPassword = await bcrypt.hash( request.body.password, salt )
 
         // Substract one available user from the license
-        const license = await LicenseKey.findOne( { key: request.body.licenseKey } )
-        license.usersAvailable = license.usersAvailable - 1,
-        await license.save()
+        //const license = await LicenseKey.findOne( { key: request.body.licenseKey } )
+        //license.usersAvailable = license.usersAvailable - 1,
+        //await license.save()
 
         const user = new Usuario({
-            nombre: request.body.nombre,
+            name: request.body.name,
+            lastName: request.body.lastName,
+            type: request.body.type,
             email: request.body.email,
             password: hashedPassword,
-            empresa: license.empresa,
-            licenseKey: license.key,
-            buttonLink: 'tmp',
+            //empresa: license.empresa,
+            //licenseKey: license.key,
+            //buttonLink: 'tmp',
             active: false,
         })
         await user.save()
 
-        user.buttonLink = `${process.env.FRONTEND_URL}solicitud/?uid=${user._id}`
+        //user.buttonLink = `${process.env.FRONTEND_URL}solicitud/?uid=${user._id}`
         user.save()
 
         // Create default preferences
         
-        const preference = new Preferencias({
-            usuarioId: user._id,
-        })
-        await preference.save()
+        //const preference = new Preferencias({
+        //    usuarioId: user._id,
+        //})
+        //await preference.save()
 
         // Create default form
-        const form = new Formularios({
-            usuarioId: user._id,
-        })
-        await form.save()
+        //const form = new Formularios({
+        //    usuarioId: user._id,
+        //})
+        //await form.save()
         
         registrationMail( request.body.email, user )
         

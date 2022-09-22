@@ -5,7 +5,7 @@ const LicenseKey = require( `../models/licenseKey` )
 
 const validateCreate = [
 
-    check( 'nombre' )
+    check( 'name' )
         .exists({ checkFalsy: true }).withMessage( `El nombre no puede estar vacío.` )
         .not().isEmpty().withMessage( `El nombre no puede estar en blanco.` )
         .isLength( { min: 5, max: 100 } ).withMessage( `El nombre debe tener entre 5 y 100 caracteres.` )

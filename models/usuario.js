@@ -1,12 +1,7 @@
 const mongoose = require( `mongoose` )
-const AutoIncrement = require('mongoose-sequence')(mongoose);
+//const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const usuarioSchema = new mongoose.Schema({
-    _id: Number,
-    nombre: {
-        type: String,
-        required: true,
-    },
     email: {
         type: String,
         required: true,
@@ -16,22 +11,18 @@ const usuarioSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    licenseKey: {
+    name:  {
         type: String,
         required: true,
     },
-    empresa: {
-        type: String,
-        required: false,
-        unique: false,
-    },
-    buttonLink: {
+    lastName: {
         type: String,
         required: true,
-        unique: true,
     },
-    avatar: {
+    type: {
         type: String,
+        required: true,
+        enum: ['Arquitecto', 'Interiorista', 'Otro'],
     },
     active: {
         type: Boolean,
@@ -41,5 +32,5 @@ const usuarioSchema = new mongoose.Schema({
 })
 
 usuarioSchema.set( 'timestamps', true )
-usuarioSchema.plugin(AutoIncrement, {inc_field: '_id'});
+//usuarioSchema.plugin(AutoIncrement, {inc_field: '_id'});
 module.exports = mongoose.model( `Usuario`, usuarioSchema, 'usuarios' )
