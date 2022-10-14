@@ -86,6 +86,7 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
         //await form.save()
         
         registrationMail( request.body.email, user )
+        // Account Activation route is located on ./auth.js It's the last one in the file.
         
         console.log( `New user ${ request.body.email } registered.` )
         return response.status(201).json( { status: 201, message: "Gracias por registrarte. En breve recibirás un correo electrónico con un enlace de activación que deberás visitar para comenzar a usar tu cuenta." } )
@@ -123,6 +124,7 @@ router.post( '/login', async ( request, response ) => {
         RefreshToken.create( { refreshToken } )
         console.log( `Authentication SUCCESSFUL for user ${ usuario.email } from ${ request.ip  }` )
         return response.status(200).json( { status: 200, message: "Autenticación exitosa.", userId: usuario._id, email: usuario.email, nombre: usuario.nombre, empresa: usuario.empresa, buttonLink: usuario.buttonLink, activo: usuario.active, accessToken, refreshToken } )
+        // refreshToken route is located in ./auth.js
     } catch (error) {
         console.error( error )
         return response.status(500).json( { status: 500, message: error } )
