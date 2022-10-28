@@ -8,11 +8,11 @@ router.get('/', function(req, res, next) {
   };
 
   //res.render('index', params);
-  res.json({message: 'Test successful'})
+  res.send('🪑 Idelika© Backend v0.1')
 });
 
 router.get('/test', (req, res) => {
-  res.json({message: 'Test successful'})
+  res.json({message: '🪑 Idelika© Backend v0.1'})
 })
 
 module.exports = router;
