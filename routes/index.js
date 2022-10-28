@@ -10,4 +10,8 @@ router.get('/', function(req, res, next) {
   res.render('index', params);
 });
 
+router.get('/test', (req, res) => {
+  res.json({message: 'Test successful'})
+})
+
 module.exports = router;
