@@ -22,6 +22,11 @@ const validateCreate = [
                 }
             } )
         } ),
+
+    check( 'phone' )
+        .exists({checkFalsy: true}).withMessage(`El número telefónico no puede estar vacío.`)
+        .not().isEmpty().withMessage( `El nombre no puede estar en blanco.` )
+        .matches(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/).withMessage(`El número telefónico debe tener el formato correcto`),
     
     check( 'password' )
         .exists({ checkFalsy: true }).withMessage( `Se requiere definir una contraseña.` )

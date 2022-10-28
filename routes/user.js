@@ -58,10 +58,10 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
 
         const user = new Usuario({
             name: request.body.name,
-            lastName: request.body.lastName,
             type: request.body.type,
             email: request.body.email,
             password: hashedPassword,
+            phone: request.body.phone,
             //empresa: license.empresa,
             //licenseKey: license.key,
             //buttonLink: 'tmp',
