@@ -64,6 +64,7 @@ app.use(function(req, res, next) {
 app.locals.users = {};
 
 // MSAL config
+/*
 const msalConfig = {
   auth: {
     clientId: process.env.OAUTH_CLIENT_ID,
@@ -79,7 +80,7 @@ const msalConfig = {
       logLevel: msal.LogLevel.Verbose,
     }
   }
-};
+};*/
 
 // Create msal application object
 //app.locals.msalClient = new msal.ConfidentialClientApplication(msalConfig);
