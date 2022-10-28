@@ -10,7 +10,7 @@ const express = require( "express" )
 const outlookAuthRouter = require('./routes/outlook-auth');
 const indexRouter = require( './routes/index' )
 const authRouter = require( `./routes/auth` )
-const userRouter = require( "./routes/users" )
+const userRouter = require( "./routes/user" )
 
 //const PreferenciaController = require( `./controllers/PreferenciaController` )
 //const FormularioController = require( `./controllers/FormularioController` )

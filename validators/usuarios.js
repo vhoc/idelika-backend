@@ -1,6 +1,6 @@
 const { check } = require( 'express-validator' )
 const { validateResult } = require( '../helpers/validateHelper' )
-const Usuario = require( `../models/usuario` )
+const Usuario = require( `../models/user` )
 const LicenseKey = require( `../models/licenseKey` )
 
 const validateCreate = [
