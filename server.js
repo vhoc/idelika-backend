@@ -1,7 +1,7 @@
 require( 'dotenv' ).config()
 const session = require('express-session');
 const flash = require('connect-flash');
-const msal = require("@azure/msal-node");
+//const msal = require("@azure/msal-node");
 const connection = require( `./db` )
 
 const cors = require( `cors` )
@@ -10,13 +10,13 @@ const express = require( "express" )
 const outlookAuthRouter = require('./routes/outlook-auth');
 const indexRouter = require( './routes/index' )
 const authRouter = require( `./routes/auth` )
-const userRouter = require( "./routes/usuarios" )
+const userRouter = require( "./routes/users" )
 
-const PreferenciaController = require( `./controllers/PreferenciaController` )
-const FormularioController = require( `./controllers/FormularioController` )
-const LicenseKeyController = require( `./controllers/LicenseKeyController` )
-const ZoomController = require( `./controllers/ZoomController` )
-const CategoryController = require( `./controllers/CategoryController` )
+//const PreferenciaController = require( `./controllers/PreferenciaController` )
+//const FormularioController = require( `./controllers/FormularioController` )
+//const LicenseKeyController = require( `./controllers/LicenseKeyController` )
+//const ZoomController = require( `./controllers/ZoomController` )
+//const CategoryController = require( `./controllers/CategoryController` )
 
 const app = express()
 app.use( cors() )
@@ -82,9 +82,9 @@ const msalConfig = {
 };
 
 // Create msal application object
-app.locals.msalClient = new msal.ConfidentialClientApplication(msalConfig);
+//app.locals.msalClient = new msal.ConfidentialClientApplication(msalConfig);
 
-app.set('view engine', 'hbs');
+//app.set('view engine', 'hbs');
 
 
 app.use( express.static( 'public' ) )
@@ -92,13 +92,13 @@ app.use( express.urlencoded( { encoded: true } ) )
 app.use( express.json() )
 
 app.use( "/users", userRouter )
-app.use( "/outlook-auth", outlookAuthRouter )
+//app.use( "/outlook-auth", outlookAuthRouter )
 app.use( `/auth`, authRouter )
-app.use( `/preferencias`, PreferenciaController )
-app.use( `/formularios`, FormularioController )
-app.use( `/licencias`, LicenseKeyController )
-app.use( `/zoom`, ZoomController )
-app.use( `/categories`, CategoryController )
+//app.use( `/preferencias`, PreferenciaController )
+//app.use( `/formularios`, FormularioController )
+//app.use( `/licencias`, LicenseKeyController )
+//app.use( `/zoom`, ZoomController )
+//app.use( `/categories`, CategoryController )
 app.use( '/', indexRouter )
 
 app.listen( 4000, () => console.info( `Idelika Backend started and listening on port 4000` ) )
