@@ -101,4 +101,4 @@ app.use( `/zoom`, ZoomController )
 app.use( `/categories`, CategoryController )
 app.use( '/', indexRouter )
 
-app.listen( 5000, () => console.info( `Idelika Backend started and listening on port 5000` ) )
+app.listen( 4000, () => console.info( `Idelika Backend started and listening on port 4000` ) )
