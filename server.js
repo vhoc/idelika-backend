@@ -91,7 +91,7 @@ app.use( express.static( 'public' ) )
 app.use( express.urlencoded( { encoded: true } ) )
 app.use( express.json() )
 
-app.use( "/usuarios", userRouter )
+app.use( "/users", userRouter )
 app.use( "/outlook-auth", outlookAuthRouter )
 app.use( `/auth`, authRouter )
 app.use( `/preferencias`, PreferenciaController )
