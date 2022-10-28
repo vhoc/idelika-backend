@@ -36,6 +36,6 @@ const userSchema = new mongoose.Schema({
     },
 })
 
-usuarioSchema.set( 'timestamps', true )
+userSchema.set( 'timestamps', true )
 //usuarioSchema.plugin(AutoIncrement, {inc_field: '_id'});
 module.exports = mongoose.model( `User`, userSchema, 'users' )
