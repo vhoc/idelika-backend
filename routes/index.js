@@ -7,7 +7,8 @@ router.get('/', function(req, res, next) {
     active: { home: true }
   };
 
-  res.render('index', params);
+  //res.render('index', params);
+  res.json({message: 'Test successful'})
 });
 
 router.get('/test', (req, res) => {
