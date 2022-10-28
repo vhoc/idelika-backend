@@ -123,7 +123,7 @@ router.post( '/login', async ( request, response ) => {
         const refreshToken = jwt.sign( usuarioObject, process.env.REFRESH_TOKEN_SECRET )
         RefreshToken.create( { refreshToken } )
         console.log( `Authentication SUCCESSFUL for user ${ usuario.email } from ${ request.ip  }` )
-        return response.status(200).json( { status: 200, message: "Autenticación exitosa.", userId: usuario._id, email: usuario.email, nombre: usuario.nombre, empresa: usuario.empresa, buttonLink: usuario.buttonLink, activo: usuario.active, accessToken, refreshToken } )
+        return response.status(200).json( { status: 200, message: "Autenticación exitosa.", userId: usuario._id, email: usuario.email, name: usuario.name, buttonLink: usuario.buttonLink, activo: usuario.active, tier: usuario.tier, accessToken, refreshToken } )
         // refreshToken route is located in ./auth.js
     } catch (error) {
         console.error( error )
