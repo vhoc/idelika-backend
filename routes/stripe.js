@@ -11,8 +11,8 @@ router.post('/payment-sheet', async (req, res) => {
       {apiVersion: '2022-08-01'}
     );
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 1099,
-      currency: 'eur',
+      amount: req.body.amount,
+      currency: 'mxn',
       customer: customer.id,
       automatic_payment_methods: {
         enabled: true,
