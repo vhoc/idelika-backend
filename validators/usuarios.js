@@ -18,7 +18,7 @@ const validateCreate = [
         .custom( value => {
             return Usuario.findOne( { email: value } ).then( usuario => {
                 if ( usuario ) {
-                    return Promise.reject( 'El usuario ya fue registrado anteriormente.' )
+                    return Promise.reject( 'El usuario ya fue registrado anteriormente, por favor regresa y cambia el correo electrónico para tu nuevo usuario.' )
                 }
             } )
         } ),
