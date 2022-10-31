@@ -11,7 +11,7 @@ const outlookAuthRouter = require('./routes/outlook-auth');
 const indexRouter = require( './routes/index' )
 const authRouter = require( `./routes/auth` )
 const userRouter = require( "./routes/user" )
-const stripeRouter = require( './routes/stripe' )
+const stripeRouter = require( "./routes/stripe" )
 
 //const PreferenciaController = require( `./controllers/PreferenciaController` )
 //const FormularioController = require( `./controllers/FormularioController` )
