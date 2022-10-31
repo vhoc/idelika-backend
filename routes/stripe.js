@@ -27,7 +27,7 @@ router.post('/payment-sheet', async (req, res) => {
     });
 });
 
-router.get('countryside', async (req, res) => {
+router.get('/countryside', async (req, res) => {
     res.json({
         pk: process.env.STRIPE_PUBLISHABLE_KEY
     })
