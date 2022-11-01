@@ -48,13 +48,12 @@ router.get( '/:id', async ( request, response ) => {
 
 // REGISTRATION
 router.post( '/', [validateCreate, validatePassword], async ( request, response ) => {
-    
+
     try {
+
         const salt = await bcrypt.genSalt()
         const hashedPassword = await bcrypt.hash( request.body.password, salt )
-
-        
-        //await user.save()
+        //console.log(ecwidUser.data.items)
 
         // Verify user's existence on Ecwid API by their email
         const ecwidUser = await axios.get( `${process.env.ECWID_API_URL}/customers`, {
@@ -66,8 +65,6 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
             },
             params: { email: request.body.email }
         } )
-
-        console.log(ecwidUser.data.items)
         
         // If the user's email exists on Ecwid, get user's data
         // and add it to the new user on the local database.
@@ -117,7 +114,7 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
                     Authorization: process.env.IDELIKA_ACCESS_TOKEN
                 },
             } ).then((ecwidResponse) => {
-                console.log(`Created on ecwid: ${ecwidResponse.data}`)
+                console.log(`Created on ecwid: ${JSON.stringify(ecwidResponse.data)}`)
                 const user = new Usuario({
                     ecwidUserId: 6546546,
                     name: request.body.name,
