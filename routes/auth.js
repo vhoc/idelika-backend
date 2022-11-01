@@ -158,7 +158,8 @@ router.get( `/activate/:usuarioId/:token`, async ( request, response ) => {
         const user = await Usuario.findById( request.params.usuarioId )
         if ( !user ) {
             console.log( `Invalid activation token received` )
-            return response.redirect( `${ process.env.FRONTEND_URL }activacion?status=invalid` )
+            //return response.redirect( `${ process.env.FRONTEND_URL }activacion?status=invalid` )
+            return response.redirect( `${ process.env.FRONTEND_URL }activacion/invalido` )
         }
 
         const token = await Token.findOne({
@@ -167,14 +168,16 @@ router.get( `/activate/:usuarioId/:token`, async ( request, response ) => {
         })
         if ( !token ) {
             console.log( `Invalid activation token received` )
-             return response.redirect( `${ process.env.FRONTEND_URL }activacion?status=invalid` )
+             //return response.redirect( `${ process.env.FRONTEND_URL }activacion?status=invalid` )
+             return response.redirect( `${ process.env.FRONTEND_URL }activacion/invalido` )
         }
         console.log( `Valid activation token. Activating user!` )
         // Change active user flag to true
         user.active = true
         user.save()
         token.delete()
-        return response.redirect( `${ process.env.FRONTEND_URL }activacion?status=valid` )
+        //return response.redirect( `${ process.env.FRONTEND_URL }activacion?status=valid` )
+        return response.redirect( `${ process.env.FRONTEND_URL }activacion/valido` )
     } catch ( error ) {
         console.log( error )
         return response.send( `Ha ocurrido un error.` )

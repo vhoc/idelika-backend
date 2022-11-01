@@ -16,3 +16,4 @@ const generateActivationLink = async ( usuario ) => {
 }
 
 module.exports = { generateActivationLink }
+//https://idelika.xneighbor.com/proxy/auth/activate/63619a3c4900f95f40df842f/56975630a6a9983f8fa40accf23cc1ea13772daf77cf03d7bdadbba917766d1c

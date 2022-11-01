@@ -141,6 +141,10 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
                 } )
             }).catch(error => {
                 console.error(error)
+                return response.status(422).json({
+                    status: 422,
+                    message: "Hubo un error al crear el usuario en el sistema de la tienda.",
+                })
             })
         }
 
