@@ -66,12 +66,7 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
         //await user.save()
 
         // If email exists on Ecwid API:
-        const users = await axios.get( `${process.env.ECWID_API_URL}/customers`, {
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        } )
+        const users = await axios.get( `${process.env.ECWID_API_URL}/customers` )
 
         console.log(`Users from ecwid: ${JSON.stringify(users)}`)
             // Check if user exists in the database.
