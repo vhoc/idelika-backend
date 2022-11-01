@@ -53,7 +53,7 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
         const salt = await bcrypt.genSalt()
         const hashedPassword = await bcrypt.hash( request.body.password, salt )
 
-        const ecwidUser = new Usuario({
+        const user = new Usuario({
             name: request.body.name,
             type: request.body.type,
             email: request.body.email,
@@ -67,7 +67,7 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
         //await user.save()
 
         // If email exists on Ecwid API:
-        const users = await axios.get( `${process.env.ECWID_API_URL}/customers`, {
+        const ecwidUser = await axios.get( `${process.env.ECWID_API_URL}/customers`, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -91,7 +91,7 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
         //user.buttonLink = `${process.env.FRONTEND_URL}solicitud/?uid=${user._id}`
         //user.save()
         
-        registrationMail( request.body.email, user )
+        //registrationMail( request.body.email, user )
         
         console.log( `New user ${ request.body.email } registered.` )
         return response.status(201).json( {
