@@ -1,3 +1,4 @@
+require( 'dotenv' ).config()
 const express = require( 'express' )
 const router = express.Router()
 const axios = require('axios')
@@ -71,7 +72,7 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer secret_r5FGr4nxLA99L9VS2LYd7ZEx1MGrTtk5'
+                Authorization: process.env.IDELIKA_ACCESS_TOKEN
             }
         } )
 
