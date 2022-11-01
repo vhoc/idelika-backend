@@ -51,10 +51,19 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
         const salt = await bcrypt.genSalt()
         const hashedPassword = await bcrypt.hash( request.body.password, salt )
 
-        // Substract one available user from the license
-        //const license = await LicenseKey.findOne( { key: request.body.licenseKey } )
-        //license.usersAvailable = license.usersAvailable - 1,
-        //await license.save()
+        // Check user existence in Ecwid API by their email
+        const users = axios.get()
+
+        // If email exists on Ecwid API:
+            // Check if user exists in the database.
+                // Do nothing and return user exists error.
+
+            // If user doesnt exist in database.
+                // Create user in database with its tier (customer group) from Ecwid API
+
+        // If email doesnt exist on Ecwid API:
+            // Create customer on Ecwid, with tier (customer group) 0
+            // Create user on local database
 
         const user = new Usuario({
             name: request.body.name,
@@ -70,20 +79,7 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
         await user.save()
 
         //user.buttonLink = `${process.env.FRONTEND_URL}solicitud/?uid=${user._id}`
-        user.save()
-
-        // Create default preferences
-        
-        //const preference = new Preferencias({
-        //    usuarioId: user._id,
-        //})
-        //await preference.save()
-
-        // Create default form
-        //const form = new Formularios({
-        //    usuarioId: user._id,
-        //})
-        //await form.save()
+        //user.save()
         
         registrationMail( request.body.email, user )
         // Account Activation route is located on ./auth.js It's the last one in the file.
