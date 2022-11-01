@@ -16,9 +16,7 @@ router.post('/payment-sheet', async (req, res) => {
       amount: req.body.amount,
       currency: 'mxn',
       customer: customer.id,
-      automatic_payment_methods: {
-        enabled: true,
-      },
+      payment_method_types: ['card'],
     });
   
     res.json({
