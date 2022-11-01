@@ -28,7 +28,7 @@ router.post('/payment-sheet', async (req, res) => {
       publishableKey: process.env.STRIPE_PUBLISHABLE_KEY
     });
   } catch (error) {
-    res.json(error)
+    res.status(error.statusCode).json(error)
   }
     
 });
