@@ -26,17 +26,24 @@ const registrationMail = async ( address, usuario ) => {
     })
 
     const mailOptions = {
-        from: 'no-responder@suempresa.us',
+        from: process.env.MAIL_FROM,
         to: address,
-        subject: "Activa tu cuenta en Session Scheduler",
+        subject: "Activa tu cuenta en Idelika Online",
         text: `Visita este enlace para activar tu cuenta: ${ activationLink }`,
         html: htmlToSend,
     }
 
-    transporter.sendMail(mailOptions, ( error, info ) => {
-        console.log( `Sending activation e-mail to ${ address }` )
-        error ? console.log(error) : console.log( `Activation e-mail sent. ${ info.response }` )
-    })
+    try {
+        transporter.sendMail(mailOptions, ( error, info ) => {
+            console.log( `Sending activation e-mail to ${ address }` )
+            error ? console.log(error) : console.log( `Activation e-mail sent. ${ info.response }` )
+        })
+    } catch (error) {
+        console.log(`ERROR sending email:`)
+        console.log(error)
+    }
+
+    
 
 }
 
