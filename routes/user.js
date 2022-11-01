@@ -114,9 +114,9 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
                     Authorization: process.env.IDELIKA_ACCESS_TOKEN
                 },
             } ).then((ecwidResponse) => {
-                console.log(`Created on ecwid: ${ecwidResponse.data.id}`)
+                //console.log(`Created on ecwid: ${ecwidResponse.data.id}`)
                 const user = new Usuario({
-                    ecwidUserId: 6546546,
+                    ecwidUserId: ecwidResponse.data.id,
                     name: request.body.name,
                     type: request.body.type,
                     email: request.body.email,
