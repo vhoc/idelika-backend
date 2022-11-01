@@ -71,7 +71,7 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
         
         // If the user's email exists on Ecwid, get user's data
         // and add it to the new user on the local database.
-        if (ecwidUser.data.items > 0) {
+        if (ecwidUser.data.items.length > 0) {
 
             const user = new Usuario({
                 ecwidUserId: ecwidUser.data.items[0].id,
