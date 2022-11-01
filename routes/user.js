@@ -53,20 +53,10 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
         const salt = await bcrypt.genSalt()
         const hashedPassword = await bcrypt.hash( request.body.password, salt )
 
-        const user = new Usuario({
-            name: request.body.name,
-            type: request.body.type,
-            email: request.body.email,
-            password: hashedPassword,
-            phone: request.body.phone,
-            //empresa: license.empresa,
-            //licenseKey: license.key,
-            //buttonLink: 'tmp',
-            active: false,
-        })
+        
         //await user.save()
 
-        // If email exists on Ecwid API:
+        // Verify user's existence on Ecwid API by their email
         const ecwidUser = await axios.get( `${process.env.ECWID_API_URL}/customers`, {
             method: 'GET',
             headers: {
@@ -78,6 +68,36 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
         } )
 
         console.log(ecwidUser.data.items)
+        
+        // If the user's email exists on Ecwid, get user's data
+        // and add it to the new user on the local database.
+        if (ecwidUser.data.items > 0) {
+
+            const user = new Usuario({
+                ecwidUserId: ecwidUser.data.items[0].id,
+                name: request.body.name,
+                type: request.body.type,
+                email: request.body.email,
+                password: hashedPassword,
+                phone: request.body.phone,
+                active: false,
+            })
+
+            console.log( `New user ${ request.body.email } registered.` )
+            return response.status(201).json( {
+                status: 201,
+                message: "Gracias por registrarte. En breve recibirás un correo electrónico con un enlace de activación que deberás visitar para comenzar a usar tu cuenta.",
+                user: {
+                    ecwidUserId: user.ecwidUserId,
+                    email: user.email,
+                    type: user.type,
+                    name: user.name,
+                    phone: user.phone,
+                    active: user.active,
+                }
+            } )
+
+        }
             // Check if user exists in the database.
                 // Do nothing and return user exists error.
 
@@ -93,18 +113,7 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
         
         //registrationMail( request.body.email, user )
         
-        console.log( `New user ${ request.body.email } registered.` )
-        return response.status(201).json( {
-            status: 201,
-            message: "Gracias por registrarte. En breve recibirás un correo electrónico con un enlace de activación que deberás visitar para comenzar a usar tu cuenta.",
-            user: {
-                email: user.email,
-                name: user.name,
-                phone: user.phone,
-                type: user.type,
-                tier: user.tier,
-            }
-        } )
+        
     } catch ( error ) {
         console.error( error )
         return response.status(500).json( { status: 500, message: "Ha ocurrido un error al intentar el registro." } )

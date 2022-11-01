@@ -1,6 +1,9 @@
 const mongoose = require( `mongoose` )
 
 const userSchema = new mongoose.Schema({
+    ecwidUserId: {
+        type: Number,
+    },
     email: {
         type: String,
         required: true,
@@ -22,12 +25,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         enum: ['Arquitecto', 'Interiorista', 'Otro'],
-    },
-    tier: {
-        type: Number,
-        required: true,
-        default: 0,
-        enum: [0, 1, 2, 3, 4, 5],
     },
     active: {
         type: Boolean,
