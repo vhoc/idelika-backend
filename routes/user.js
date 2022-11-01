@@ -76,7 +76,7 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
             }
         } )
 
-        console.log(`Users from ecwid: ${users.response}`)
+        console.log(users)
             // Check if user exists in the database.
                 // Do nothing and return user exists error.
 
