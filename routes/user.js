@@ -118,7 +118,7 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
             } ).then((response) => {
                 console.log(`Created on ecwid: ${response.data}`)
                 const user = new Usuario({
-                    ecwidUserId: ecwidUser.data.items[0].id,
+                    ecwidUserId: 6546546,
                     name: request.body.name,
                     type: request.body.type,
                     email: request.body.email,
@@ -131,7 +131,7 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
                     status: 201,
                     message: "Gracias por registrarte. En breve recibirás un correo electrónico con un enlace de activación que deberás visitar para comenzar a usar tu cuenta.",
                     user: {
-                        ecwidUserId: 6546546,
+                        ecwidUserId: user.ecwidUserId,
                         email: user.email,
                         type: user.type,
                         name: user.name,
