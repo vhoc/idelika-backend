@@ -53,7 +53,7 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
         const salt = await bcrypt.genSalt()
         const hashedPassword = await bcrypt.hash( request.body.password, salt )
 
-        const user = new Usuario({
+        const ecwidUser = new Usuario({
             name: request.body.name,
             type: request.body.type,
             email: request.body.email,
@@ -73,10 +73,11 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
                 Authorization: process.env.IDELIKA_ACCESS_TOKEN
-            }
+            },
+            params: { email: request.body.email }
         } )
 
-        console.log(users.items)
+        console.log(ecwidUser)
             // Check if user exists in the database.
                 // Do nothing and return user exists error.
 
