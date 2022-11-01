@@ -4,26 +4,22 @@ const router = express.Router()
 const stripe = require( 'stripe' )( process.env.STRIPE_SECRET_KEY )
 
 router.post('/payment-sheet', async (req, res) => {
+  try {
     // Use an existing Customer ID if this is a returning customer.
     const customer = await stripe.customers.create();
     const ephemeralKey = await stripe.ephemeralKeys.create(
       {customer: customer.id},
       {apiVersion: '2022-08-01'}
     );
-
-    try {
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: req.body.amount,
-        currency: 'mxn',
-        customer: customer.id,
-        automatic_payment_methods: {
-          enabled: true,
-        },
-      });
-    } catch (error) {
-      res.json(eror)
-    }
     
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: req.body.amount,
+      currency: 'mxn',
+      customer: customer.id,
+      automatic_payment_methods: {
+        enabled: true,
+      },
+    });
   
     res.json({
       paymentIntent: paymentIntent.client_secret,
@@ -31,6 +27,10 @@ router.post('/payment-sheet', async (req, res) => {
       customer: customer.id,
       publishableKey: process.env.STRIPE_PUBLISHABLE_KEY
     });
+  } catch (error) {
+    res.json(error)
+  }
+    
 });
 
 router.get('/countryside', async (req, res) => {
