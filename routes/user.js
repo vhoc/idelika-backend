@@ -82,7 +82,8 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
                 phone: request.body.phone,
                 active: false,
             })
-
+            user.save()
+            registrationMail( request.body.email, user )
             console.log( `New user ${ request.body.email } registered.` )
             return response.status(201).json( {
                 status: 201,
@@ -126,6 +127,8 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
                     phone: request.body.phone,
                     active: false,
                 })
+                user.save()
+                registrationMail( request.body.email, user )
                 console.log( `New user ${ request.body.email } registered.` )
                 return response.status(201).json( {
                     status: 201,
