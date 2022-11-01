@@ -97,16 +97,54 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
                 }
             } )
 
-        }
-            // Check if user exists in the database.
-                // Do nothing and return user exists error.
-
-            // If user doesnt exist in database.
-                // Create user in database with its tier (customer group) from Ecwid API
-
-        // If email doesnt exist on Ecwid API:
+        } else {
+            // If email doesnt exist on Ecwid API:
             // Create customer on Ecwid, with tier (customer group) 0
             // Create user on local database
+            axios.post( `${process.env.ECWID_API_URL}/customers`, {
+                email: request.body.email,
+                password: request.body.password,
+                customerGroupId: 0,
+                billingPerson: {
+                    name: request.body.name,
+                }
+            }, {
+                headers: {
+                    "method": 'POST',
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    Authorization: process.env.IDELIKA_ACCESS_TOKEN
+                },
+            } ).then((response) => {
+                console.log(`Created on ecwid: ${response.data}`)
+                const user = new Usuario({
+                    ecwidUserId: ecwidUser.data.items[0].id,
+                    name: request.body.name,
+                    type: request.body.type,
+                    email: request.body.email,
+                    password: hashedPassword,
+                    phone: request.body.phone,
+                    active: false,
+                })
+                console.log( `New user ${ request.body.email } registered.` )
+                return response.status(201).json( {
+                    status: 201,
+                    message: "Gracias por registrarte. En breve recibirás un correo electrónico con un enlace de activación que deberás visitar para comenzar a usar tu cuenta.",
+                    user: {
+                        ecwidUserId: 6546546,
+                        email: user.email,
+                        type: user.type,
+                        name: user.name,
+                        phone: user.phone,
+                        active: user.active,
+                    }
+                } )
+            }).catch(error => {
+                console.error(error)
+            })
+        }
+
+        
 
         //user.buttonLink = `${process.env.FRONTEND_URL}solicitud/?uid=${user._id}`
         //user.save()
