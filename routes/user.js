@@ -51,20 +51,6 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
         const salt = await bcrypt.genSalt()
         const hashedPassword = await bcrypt.hash( request.body.password, salt )
 
-        // Check user existence in Ecwid API by their email
-        const users = axios.get()
-
-        // If email exists on Ecwid API:
-            // Check if user exists in the database.
-                // Do nothing and return user exists error.
-
-            // If user doesnt exist in database.
-                // Create user in database with its tier (customer group) from Ecwid API
-
-        // If email doesnt exist on Ecwid API:
-            // Create customer on Ecwid, with tier (customer group) 0
-            // Create user on local database
-
         const user = new Usuario({
             name: request.body.name,
             type: request.body.type,
@@ -76,13 +62,31 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
             //buttonLink: 'tmp',
             active: false,
         })
-        await user.save()
+        //await user.save()
+
+        // If email exists on Ecwid API:
+        const users = await axios.get( `${process.env.ECWID_API_URL}/customers`, {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        } )
+
+        console.log(`Users from ecwid: ${JSON.stringify(users)}`)
+            // Check if user exists in the database.
+                // Do nothing and return user exists error.
+
+            // If user doesnt exist in database.
+                // Create user in database with its tier (customer group) from Ecwid API
+
+        // If email doesnt exist on Ecwid API:
+            // Create customer on Ecwid, with tier (customer group) 0
+            // Create user on local database
 
         //user.buttonLink = `${process.env.FRONTEND_URL}solicitud/?uid=${user._id}`
         //user.save()
         
         registrationMail( request.body.email, user )
-        // Account Activation route is located on ./auth.js It's the last one in the file.
         
         console.log( `New user ${ request.body.email } registered.` )
         return response.status(201).json( {
