@@ -27,7 +27,7 @@ router.get('/user/:id', async (request, response) => {
       "Tier 3": 3,
       "Tier 4": 4,
     }
-    console.log(response.data)
+    console.log(ecwidUser.data)
     return response.status(200).json({
       ecwidUserId: response.data.id,
       email: response.data.email,
