@@ -2,6 +2,7 @@ require( 'dotenv' ).config()
 const { response } = require('express');
 const express = require( 'express' )
 const router = express.Router()
+const axios = require('axios')
 
 // Get Ecwid's user details
 router.get('/user/:id', async (req, res) => {
