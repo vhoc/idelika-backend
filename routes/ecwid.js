@@ -29,11 +29,11 @@ router.get('/user/:id', async (request, response) => {
     }
     console.log(ecwidUser.data)
     return response.status(200).json({
-      ecwidUserId: response.data.id,
-      email: response.data.email,
-      billingPerson: response.data.billingPerson,
-      shippingAddresses: response.data.shippingAddresses,
-      tier: tiers[response.data.customerGroupName],
+      ecwidUserId: ecwidUser.data.id,
+      email: ecwidUser.data.email,
+      billingPerson: ecwidUser.data.billingPerson,
+      shippingAddresses: ecwidUser.data.shippingAddresses,
+      tier: tiers[ecwidUser.data.customerGroupName],
     })
   } else {
     return response.status(404).json({
@@ -43,7 +43,7 @@ router.get('/user/:id', async (request, response) => {
 
   } catch (error) {
     console.error(error)
-    res.status(500).json(error)
+    response.status(500).json(error)
   }
     
 });
