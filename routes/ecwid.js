@@ -16,7 +16,7 @@ router.get('/user/:id', async (request, response) => {
       },
   } )
 
-  if (ecwidUser.data.items.length > 0) {
+  if (ecwidUser.data) {
 
     // Adapt customerGroupNames to Tiers for the App
     const tiers = {
