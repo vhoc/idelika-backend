@@ -4,7 +4,7 @@ const router = express.Router()
 
 router.post('/', async (req, res) => {
   try {
-    return response.json(req.body)
+    return res.json(req.body)
   } catch (error) {
     console.error(error)
     res.status(500).json(error)
