@@ -7,12 +7,13 @@ const connection = require( `./db` )
 const cors = require( `cors` )
 const express = require( "express" )
 
-const outlookAuthRouter = require('./routes/outlook-auth');
+//const outlookAuthRouter = require('./routes/outlook-auth');
 const indexRouter = require( './routes/index' )
 const authRouter = require( `./routes/auth` )
 const userRouter = require( "./routes/user" )
 const stripeRouter = require( "./routes/stripe" )
 const orderRouter = require( `./routes/order` )
+const ecwidRouter = require( `./routes/ecwid` )
 
 //const PreferenciaController = require( `./controllers/PreferenciaController` )
 //const FormularioController = require( `./controllers/FormularioController` )
@@ -99,6 +100,7 @@ app.use( "/users", userRouter )
 app.use( `/auth`, authRouter )
 app.use( `/stripe`, stripeRouter )
 app.use( `/order`, orderRouter )
+app.use( `/ecwid`, ecwidRouter )
 //app.use( `/preferencias`, PreferenciaController )
 //app.use( `/formularios`, FormularioController )
 //app.use( `/licencias`, LicenseKeyController )
