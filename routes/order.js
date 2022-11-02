@@ -6,7 +6,8 @@ router.post('/', async (req, res) => {
   try {
     return response.json(req.body)
   } catch (error) {
-    res.json(error)
+    console.error(error)
+    res.status(500).json(error)
   }
     
 });
