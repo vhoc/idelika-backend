@@ -4,20 +4,36 @@ const express = require( 'express' )
 const router = express.Router()
 
 // Get Ecwid's user details
-router.get('/user', async (req, res) => {
+router.get('/user/:id', async (req, res) => {
   try {
-    const ecwidUser = await axios.get( `${process.env.ECWID_API_URL}/customers`, {
+    const ecwidUser = await axios.get( `${process.env.ECWID_API_URL}/customers/${request.params.id}`, {
       method: 'GET',
       headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
           Authorization: process.env.IDELIKA_ACCESS_TOKEN
       },
-      params: { email: request.body.email }
   } )
 
   if (ecwidUser.data.items.length > 0) {
-    return response.status(200).json( ecwidUser.data.items[0] )
+
+    // Adapt customerGroupNames to Tiers for the App
+    const tiers = {
+      "General": 0,
+      "Tier 0": 0,
+      "Tier 1": 1,
+      "Tier 2": 2,
+      "Tier 3": 3,
+      "Tier 4": 4,
+    }
+
+    return response.status(200).json({
+      ecwidUserId: response.data.id,
+      email: response.data.email,
+      billingPerson: response.data.billingPerson,
+      shippingAddresses: response.data.shippingAddresses,
+      tier: tiers[response.data.customerGroupName],
+    })
   } else {
     return response.status(404).json({
       message: "No se encontró el usuario"
