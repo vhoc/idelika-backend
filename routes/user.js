@@ -53,7 +53,8 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
 
         const salt = await bcrypt.genSalt()
         const hashedPassword = await bcrypt.hash( request.body.password, salt )
-        //console.log(ecwidUser.data.items)
+        //console.log(ecwidUser.data.items)❯ cd frontend
+
 
         // Verify user's existence on Ecwid API by their email
         const ecwidUser = await axios.get( `${process.env.ECWID_API_URL}/customers`, {
@@ -189,7 +190,18 @@ router.post( '/login', async ( request, response ) => {
         const refreshToken = jwt.sign( usuarioObject, process.env.REFRESH_TOKEN_SECRET )
         RefreshToken.create( { refreshToken } )
         console.log( `Authentication SUCCESSFUL for user ${ usuario.email } from ${ request.ip  }` )
-        return response.status(200).json( { status: 200, message: "Autenticación exitosa.", userId: usuario._id, email: usuario.email, name: usuario.name, buttonLink: usuario.buttonLink, activo: usuario.active, tier: usuario.tier, accessToken, refreshToken } )
+        return response.status(200).json({
+            status: 200,
+            message: "Autenticación exitosa.",
+            userId: usuario._id,
+            ecwidUserId: usuario.ecwidUserId,
+            email: usuario.email,
+            phone: usuario.phone,
+            name: usuario.name,
+            active: usuario.active,
+            accessToken,
+            refreshToken
+        })
         // refreshToken route is located in ./auth.js
     } catch (error) {
         console.error( error )
