@@ -190,6 +190,7 @@ router.post( '/login', async ( request, response ) => {
             message: "Autenticación exitosa.",
             userId: usuario._id,
             ecwidUserId: usuario.ecwidUserId,
+            type: usuario.type,
             email: usuario.email,
             phone: usuario.phone,
             name: usuario.name,
