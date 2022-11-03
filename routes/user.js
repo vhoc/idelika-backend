@@ -30,16 +30,11 @@ router.get( '/:id', async ( request, response ) => {
     //response.send( `Get one user: ${ request.params.id }` )
     try {
         const usuario = await Usuario.findById( request.params.id )
-        //const formulario = await Formularios.findOne( { usuarioId: request.params.id } )
-        //const preferencias = await Preferencias.findOne( { usuarioId: request.params.id } )
 
         return response.status( 200 ).json( {
             id: usuario._id,
             nombre: usuario.nombre,
             email: usuario.email,
-            //empresa: usuario.empresa,
-            //formulario,
-            //preferencias
         } )
     } catch ( error ) {
         return response.status( 500 ).json( { status: 500, message: error.message } )
