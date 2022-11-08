@@ -57,6 +57,10 @@ router.get('/user/:id', async (request, response) => {
       billingPerson: ecwidUser.data.billingPerson,
       shippingAddresses: ecwidUser.data.shippingAddresses,
       tier: tiers[ecwidUser.data.customerGroupName],
+      discount: {
+        type: calculate.data.discountInfo[0].type,
+        value: calculate.data.discountInfo[0].value
+      }
     })
   } else {
     return response.status(404).json({
