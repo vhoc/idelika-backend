@@ -59,4 +59,28 @@ router.get('/user/:id', async (request, response) => {
 
 });
 
+router.get(`/shippingMethods`, async (request, response) => {
+  try {
+    const shippingOptions = await axios.get(`${process.env.ECWID_API_URL}/profile/shippingOptions`, {
+      method: 'GET',
+      headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: process.env.IDELIKA_ACCESS_TOKEN
+      },
+    })
+
+    if (shippingOptions.data) {
+      return response.status(200).json(shippingOptions.data)
+    } else {
+      return response.status(404).json({
+        message: "No existen métodos de envío"
+      })
+    }
+  } catch (error) {
+    console.error(error)
+    response.status(500).json(error)
+  }
+})
+
 module.exports = router;
