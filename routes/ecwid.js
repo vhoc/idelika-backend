@@ -3,6 +3,7 @@ const { response } = require('express');
 const express = require( 'express' )
 const router = express.Router()
 const axios = require('axios')
+const { getUserDiscount } = require( `../helpers/ecwidUserData` )
 
 // Get Ecwid's user details
 router.get('/user/:id', async (request, response) => {
@@ -31,6 +32,7 @@ router.get('/user/:id', async (request, response) => {
 
     // Get user discount:
     
+    /*
     const calculate = await axios.post(`${process.env.ECWID_API_URL}/order/calculate`, {
         email: "sucorees@gmail.com",
         customerId: 202787982,
@@ -47,7 +49,8 @@ router.get('/user/:id', async (request, response) => {
         'Content-Type': 'application/json',
         Authorization: process.env.IDELIKA_ACCESS_TOKEN
       },
-    })
+    })*/
+    const calculate = await getUserDiscount(ecwidUser.data.id, ecwidUser.data.email)
 
     //console.log(calculate.data.discountInfo[0].value)
 
@@ -58,8 +61,8 @@ router.get('/user/:id', async (request, response) => {
       shippingAddresses: ecwidUser.data.shippingAddresses,
       tier: tiers[ecwidUser.data.customerGroupName],
       discount: {
-        type: calculate.data.discountInfo[0].type,
-        value: calculate.data.discountInfo[0].value || 0
+        type: calculate.type,
+        value: calculate.value || 0
       }
     })
   } else {

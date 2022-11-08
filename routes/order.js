@@ -1,7 +1,6 @@
 require( 'dotenv' ).config()
 const express = require( 'express' )
 const router = express.Router()
-const { getUserDiscount } = require( `../helpers/ecwidUserData` )
 
 router.post('/', async (req, res) => {
   /**
