@@ -30,6 +30,7 @@ router.get('/user/:id', async (request, response) => {
     console.log(ecwidUser.data)
 
     // Get user discount:
+    /*
     const discount = await axios.post(`${process.env.ECWID_API_URL}/order/calculate`, {
       method: 'POST',
       headers: {
@@ -51,7 +52,7 @@ router.get('/user/:id', async (request, response) => {
       
     })
 
-    console.log(discount.discountInfo[0])
+    console.log(discount.discountInfo[0])*/
 
     return response.status(200).json({
       ecwidUserId: ecwidUser.data.id,
