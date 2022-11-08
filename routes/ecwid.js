@@ -51,7 +51,7 @@ router.get('/user/:id', async (request, response) => {
       
     })
 
-    console.log(discount)
+    console.log(discount.discountInfo[0])
 
     return response.status(200).json({
       ecwidUserId: ecwidUser.data.id,
