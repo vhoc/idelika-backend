@@ -10,8 +10,8 @@ router.post('/', async (req, res) => {
    *  - shippingOption
    *  - subtotal
    *  - total
-   *  - paymentMethod (PAID, AWAITING_PAYMENT)
-   *  - paymentStatus
+   *  - paymentMethod ("Pagar con transferencia bancaria", "Credit or debit card")
+   *  - paymentStatus (PAID, AWAITING_PAYMENT) (Will depend on the paymentMethod. Card = paid, Transfer = awaiting)
    *  - fulfillmentStatus (AWAITING_PROCESSING)
    *  - items[]
    *  - privateAdminNotes?

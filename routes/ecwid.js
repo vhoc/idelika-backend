@@ -30,17 +30,8 @@ router.get('/user/:id', async (request, response) => {
     console.log(ecwidUser.data)
 
     // Get user discount:
-    /*
+    
     const discount = await axios.post(`${process.env.ECWID_API_URL}/order/calculate`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: process.env.IDELIKA_ACCESS_TOKEN
-      },
-    }, {
-
-      
         "email": "sucorees@gmail.com",
         "customerId": 202787982,
         "items": [
@@ -49,10 +40,16 @@ router.get('/user/:id', async (request, response) => {
             "quantity": 1
           }
         ]
-      
+    }, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: process.env.IDELIKA_ACCESS_TOKEN
+      },
     })
 
-    console.log(discount.discountInfo[0])*/
+    console.log(discount.discountInfo[0])
 
     return response.status(200).json({
       ecwidUserId: ecwidUser.data.id,
