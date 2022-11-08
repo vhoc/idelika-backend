@@ -28,6 +28,31 @@ router.get('/user/:id', async (request, response) => {
       "Tier 4": 4,
     }
     console.log(ecwidUser.data)
+
+    // Get user discount:
+    const discount = await axios.post(`${process.env.ECWID_API_URL}/order/calculate`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: process.env.IDELIKA_ACCESS_TOKEN
+      },
+    }, {
+
+      
+        "email": "sucorees@gmail.com",
+        "customerId": 202787982,
+        "items": [
+          {
+            "productId": 0,
+            "quantity": 1
+          }
+        ]
+      
+    })
+
+    console.log(discount)
+
     return response.status(200).json({
       ecwidUserId: ecwidUser.data.id,
       email: ecwidUser.data.email,
@@ -45,7 +70,7 @@ router.get('/user/:id', async (request, response) => {
     console.error(error)
     response.status(500).json(error)
   }
-    
+
 });
 
 module.exports = router;
