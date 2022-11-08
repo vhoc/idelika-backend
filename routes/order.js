@@ -1,6 +1,7 @@
 require( 'dotenv' ).config()
 const express = require( 'express' )
 const router = express.Router()
+const { getUserDiscount } = require( `../helpers/ecwidUserData` )
 
 router.post('/', async (req, res) => {
   /**
@@ -24,16 +25,21 @@ router.post('/', async (req, res) => {
    * 
    * Then finally, create the order on ecwid.
    */
+
+  const discount = await getUserDiscount(req.body.customerI, req.body.email)
+
   try {
     const order = {
       customerId: req.body.customerId,
+      email: req.body.email,
       shippingOption: req.body.shippingOption,
       subtotal: req.body.subtotal,
       total: req.body.total,
       paymentMethod: req.body.paymentMethod,
       paymentStatus: req.body.paymentStatus,
       items: req.body.items,
-      privateAdminNotes: req.body.privateAdminNotes
+      privateAdminNotes: req.body.privateAdminNotes,
+      discount: discount.value
     }
     return res.json(order)
   } catch (error) {
