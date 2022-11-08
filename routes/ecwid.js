@@ -27,7 +27,7 @@ router.get('/user/:id', async (request, response) => {
       "Tier 3": 3,
       "Tier 4": 4,
     }
-    console.log(ecwidUser.data)
+    //console.log(ecwidUser.data)
 
     // Get user discount:
     
@@ -49,7 +49,7 @@ router.get('/user/:id', async (request, response) => {
       },
     })
 
-    console.log(discount.discountInfo[0])
+    console.log(discount)
 
     return response.status(200).json({
       ecwidUserId: ecwidUser.data.id,
