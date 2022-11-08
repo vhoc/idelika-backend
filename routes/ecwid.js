@@ -49,7 +49,7 @@ router.get('/user/:id', async (request, response) => {
       },
     })
 
-    console.log(calculate.data.discountInfo[0].value)
+    //console.log(calculate.data.discountInfo[0].value)
 
     return response.status(200).json({
       ecwidUserId: ecwidUser.data.id,
@@ -59,7 +59,7 @@ router.get('/user/:id', async (request, response) => {
       tier: tiers[ecwidUser.data.customerGroupName],
       discount: {
         type: calculate.data.discountInfo[0].type,
-        value: calculate.data.discountInfo[0].value
+        value: calculate.data.discountInfo[0].value || 0
       }
     })
   } else {
