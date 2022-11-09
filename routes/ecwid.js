@@ -161,14 +161,14 @@ router.post(`/available-shipping-methods`, async (request, response) => {
      * and a switch statement seems appropiate for the state.
      */
     if (
-      address.city.toLowerCase().contains('guadalajara') ||
-      address.city.toLowerCase().contains('zapopan') ||
-      address.city.toLowerCase().contains('tonala') ||
-      address.city.toLowerCase().contains('tonalá') ||
-      address.city.toLowerCase().contains('salto') ||
-      address.city.toLowerCase().contains('tlaquepaque') ||
-      address.city.toLowerCase().contains('tlajomulco') &&
-      address.state.toLowerCase() === 'jalisco'
+      address.city.toString().toLowerCase().contains('guadalajara') ||
+      address.city.toString().toLowerCase().contains('zapopan') ||
+      address.city.toString().toLowerCase().contains('tonala') ||
+      address.city.toString().toLowerCase().contains('tonalá') ||
+      address.city.toString().toLowerCase().contains('salto') ||
+      address.city.toString().toLowerCase().contains('tlaquepaque') ||
+      address.city.toString().toLowerCase().contains('tlajomulco') &&
+      address.state.toString().toLowerCase() === 'jalisco'
     ) {
       // Return the options for the people living in Guadalajara or its Metropolitan Zone
       return response.status(200).json(responseGdlMethods)
