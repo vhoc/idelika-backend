@@ -116,10 +116,7 @@ router.post(`/available-shipping-methods`, async (request, response) => {
   if ( shippingOptions.data && shippingOptions.data.length >= 1 ) {
     //return response.status(200).json(shippingOptions.data)
     // is Guadalajara Jalisco?
-    const availableMethods = shippingOptions.data.filter(object => {
-      return Object.values(object).some( value => value.toString().includes(''))
-    })
-    //const otherStates = shippingOptions.data.filter( object => Object.values(object).some(value => value.toString().includes('MX-AGU')) )
+    const guadalajaraOptions = shippingOptions.data.filter( object => Object.values(object).some(value => value.toString().includes('Envio Guadalajara y Zona Metropolitana')) )
     
 
     return response.status(200).json(shippingOptions.data)
