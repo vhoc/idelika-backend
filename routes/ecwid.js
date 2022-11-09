@@ -93,7 +93,7 @@ router.post(`/available-shipping-methods`, async (request, response) => {
   let shippingOptions
 
   //let guadalajaraMethod = []
-  let responseGdlMethods = [
+  let responseGdlMethods, responseJaliscoMethods = [
     { name: "Self Pickup", cost: 0 }
   ]
 
@@ -120,14 +120,14 @@ router.post(`/available-shipping-methods`, async (request, response) => {
   if ( shippingOptions.data && shippingOptions.data.length >= 1 ) {
     //return response.status(200).json(shippingOptions.data)
     // is Guadalajara Jalisco?
-    const guadalajaraMethod = shippingOptions.data.filter(object => {
-      return object.title === 'Envio Guadalajara y Zona Metropolitana'
-    })
-    
+    const guadalajaraMethod = shippingOptions.data.filter(object => { return object.title === 'Envio Guadalajara y Zona Metropolitana' })    
     responseGdlMethods.push({ name: guadalajaraMethod[0].title, cost: guadalajaraMethod[0].flatRate?.rate || 0 })
+
+    const jaliscoMethod = shippingOptions.data.filter(object => { return object.title === 'Otras partes de Jalisco' })
+    responseJaliscoMethods.push({ name: jaliscoMethod[0].title, cost: jaliscoMethod[0].flatRate?.rate || 0 })
     
 
-    return response.status(200).json(responseGdlMethods)
+    return response.status(200).json(responseJaliscoMethods)
   }
 
 
