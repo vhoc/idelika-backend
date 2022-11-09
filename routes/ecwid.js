@@ -90,9 +90,9 @@ router.get(`/shippingMethods`, async (request, response) => {
 
 router.post(`/available-shipping-methods`, async (request, response) => {
   const address = request.body
-
-  // Get and prepare shipping methods from Ecwid
   let shippingOptions
+
+  let guadalajaraMethod = []
 
   try {
     shippingOptions = await axios.get(`${process.env.ECWID_API_URL}/profile/shippingOptions`, {
@@ -116,12 +116,12 @@ router.post(`/available-shipping-methods`, async (request, response) => {
   if ( shippingOptions.data && shippingOptions.data.length >= 1 ) {
     //return response.status(200).json(shippingOptions.data)
     // is Guadalajara Jalisco?
-    const guadalajaraOptions = shippingOptions.data.filter(object => {
+    guadalajaraMethod = shippingOptions.data.filter(object => {
       return object.title === 'Envio Guadalajara y Zona Metropolitana'
     })
     
 
-    return response.status(200).json(guadalajaraOptions)
+    return response.status(200).json(guadalajaraMethod)
   }
 
 
