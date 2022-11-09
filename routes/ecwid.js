@@ -138,9 +138,8 @@ router.post(`/available-shipping-methods`, async (request, response) => {
 
   // Add to the shipping methods the corresponding alternate method
   // To keep this functioning the names of the methods on Ecwid SHOULD NEVER CHANGE.
-  // The States assigned to each shipping zome SHOULD also NEVER CHANGE because they're also hardocded here.
-  // But the Flat Rate amounts can be changed freely anytime
-  // as long as the Rate Type ALWAYS BE "PERCENT".
+  // The States assigned to each shipping zome SHOULD also NEVER CHANGE because they're also hardcoded here.
+  // But the Flat Rate amounts CAN BE CHANGED freely anytime as long as the Rate Type ALWAYS BE "PERCENT".
   if ( shippingOptions.data && shippingOptions.data.length >= 1 ) {
     const guadalajaraMethod = shippingOptions.data.filter(object => { return object.title === 'Envio Guadalajara y Zona Metropolitana' })    
     responseGdlMethods.push({ name: guadalajaraMethod[0].title, costPercent: guadalajaraMethod[0].flatRate?.rate || 0 })
@@ -195,24 +194,15 @@ router.post(`/available-shipping-methods`, async (request, response) => {
         return response.status(200).json(responseMexicoInteriorMethods)
         break;
     }
+
+    //I'm gonna take a shower, I feel so dirty...
     
+  } else {
+    return response.status(404).json({
+      message: "No se encontraron métodos de envíos en el sistema remoto."
+    })
   }
 
-
-  try {
-    if (address) {
-      return response.status(200).json({...address, shippingCost: 10})
-    } else {
-      return response.status(404).json({
-        message: "No se encontró un costo de envío"
-      })
-    }
-  } catch (error) {
-    console.error(error)
-    response.status(500).json(error)
-  }
-
-  console.log(JSON.stringify(address))
 })
 
 module.exports = router;
