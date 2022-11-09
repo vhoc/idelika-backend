@@ -91,31 +91,34 @@ router.get(`/shippingMethods`, async (request, response) => {
 router.post(`/available-shipping-methods`, async (request, response) => {
   const address = request.body
 
-  // Initiate the options collection from Ecwid.
+  // Initiate the container for the shipping options from Ecwid.
   let shippingOptions
 
   /**
-   * Initiate the options, one of which the user will receive in the App.
+   * Initiate the containers for the available shipping methods,
+   * one of which the user will receive in the App.
    * An aditional object will be pushed into each one of the arrays.
-   * This aditional object will be the alternate method the user can select from
+   * This aditional object will be the alternate method the user can select from,
+   * and it will depend on the user's address from the request.
    * For instance:
    *    [
           {
             "name": "Self Pickup",
             "costPercent": 0
           },
-          { <-- This object will be added below.
+          { <-- This second object will be added below.
             "name": "Otras partes de Jalisco",
             "costPercent": 10
           }
         ]
   */
+  // For now, they will only contain the Self Pickup option.
   let responseGdlMethods = [ { name: "Self Pickup", costPercent: 0 } ]
   let responseJaliscoMethods = [ { name: "Self Pickup", costPercent: 0 } ]
   let responseMexicoCentroMethods = [ { name: "Self Pickup", costPercent: 0 } ]
   let responseMexicoInteriorMethods = [ { name: "Self Pickup", costPercent: 0 } ]
 
-
+  // First get all shipment methods from Ecwid and store them in the variable: shippingOptions
   try {
     shippingOptions = await axios.get(`${process.env.ECWID_API_URL}/profile/shippingOptions`, {
       method: 'GET',
@@ -133,6 +136,11 @@ router.post(`/available-shipping-methods`, async (request, response) => {
     })
   }
 
+  // Add to the shipping methods the corresponding alternate method
+  // To keep this functioning the names of the methods on Ecwid SHOULD NEVER CHANGE.
+  // The States assigned to each shipping zome SHOULD also NEVER CHANGE because they're also hardocded here.
+  // But the Flat Rate amounts can be changed freely anytime
+  // as long as the Rate Type ALWAYS BE "PERCENT".
   if ( shippingOptions.data && shippingOptions.data.length >= 1 ) {
     const guadalajaraMethod = shippingOptions.data.filter(object => { return object.title === 'Envio Guadalajara y Zona Metropolitana' })    
     responseGdlMethods.push({ name: guadalajaraMethod[0].title, costPercent: guadalajaraMethod[0].flatRate?.rate || 0 })
@@ -146,7 +154,47 @@ router.post(`/available-shipping-methods`, async (request, response) => {
     const mexicoInteriorMethod = shippingOptions.data.filter(object => { return object.title === 'Transporte terrestre interior de México' })
     responseMexicoInteriorMethods.push({ name: mexicoInteriorMethod[0].title, costPercent: mexicoInteriorMethod[0].flatRate?.rate || 0 })
 
-    return response.status(200).json(responseMexicoInteriorMethods)
+    /**
+     * Now we will evaluate two fields from the request:
+     * 1) address.city, and 2) address.state
+     * An if conditional will do for the city evaluation
+     * and a switch statement seems appropiate for the state.
+     */
+    if (
+      address.city.toLowerCase().contains('guadalajara') ||
+      address.city.toLowerCase().contains('zapopan') ||
+      address.city.toLowerCase().contains('tonala') ||
+      address.city.toLowerCase().contains('tonalá') ||
+      address.city.toLowerCase().contains('salto') ||
+      address.city.toLowerCase().contains('tlaquepaque') ||
+      address.city.toLowerCase().contains('tlajomulco') &&
+      address.state.toLowerCase() === 'jalisco'
+    ) {
+      // Return the options for the people living in Guadalajara or its Metropolitan Zone
+      return response.status(200).json(responseGdlMethods)
+    }
+
+    // Other municipalities from Jalisco.
+    if ( address.state.toLowerCase() === 'jalisco' ) {
+      return response.status(200).json(responseJaliscoMethods)
+    }
+
+    // Now we evaluate the state. This will be quite long...
+    switch (address.state.toLowerCase()) {
+      // Zona Centro
+      case 'aguascalientes': case 'ciudad de méxico': case 'colima': case 'guanajuato': case 'guerrero': case 'hidalgo': case 'michoacán': case 'morelos': case 'méxico': case 'nayarit': case 'puebla': case 'querétaro': case 'san luis potosí': case 'zacatecas':
+        return response.status(200).json(responseMexicoCentroMethods)
+        break;
+      // Norte y Sur
+      case 'chihuahua': case 'cuahuila': case 'durango': case 'nuevo león': case 'oaxaca':  case 'quintana roo': case 'sinaloa': case 'sonora': case 'tabasco': case 'tamaulipas': case 'tlaxcala': case 'veracruz': case 'yucatán':
+        return response.status(200).json(responseMexicoInteriorMethods)
+        break;
+      // Default
+      default:
+        return response.status(200).json(responseMexicoInteriorMethods)
+        break;
+    }
+    
   }
 
 
