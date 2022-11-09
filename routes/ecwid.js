@@ -122,7 +122,7 @@ router.post(`/available-shipping-methods`, async (request, response) => {
     //const otherStates = shippingOptions.data.filter( object => Object.values(object).some(value => value.toString().includes('MX-AGU')) )
     let destinationZones = []
     shippingOptions.data.map((item, index) => {
-      shippingOptions.push(item.destinationZone)
+      destinationZones.push(item.destinationZone)
     })
 
     return response.status(200).json(destinationZones)
