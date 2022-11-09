@@ -91,6 +91,19 @@ router.get(`/shippingMethods`, async (request, response) => {
 router.post(`/shippingCost`, async (request, response) => {
   const address = request.body
 
+  try {
+    if (address) {
+      return response.status(200).json({...address, shippingCost: 10})
+    } else {
+      return response.status(404).json({
+        message: "No se encontró un costo de envío"
+      })
+    }
+  } catch (error) {
+    console.error(error)
+    response.status(500).json(error)
+  }
+
   console.log(JSON.stringify(address))
 })
 
