@@ -90,16 +90,30 @@ router.get(`/shippingMethods`, async (request, response) => {
 
 router.post(`/available-shipping-methods`, async (request, response) => {
   const address = request.body
+
+  // Initiate the options collection from Ecwid.
   let shippingOptions
 
-  //let guadalajaraMethod = []
-  let responseGdlMethods = [
-    { name: "Self Pickup", costPercent: 0 }
-  ]
-
-  let responseJaliscoMethods = [
-    { name: "Self Pickup", costPercent: 0 }
-  ]
+  /**
+   * Initiate the options, one of which the user will receive in the App.
+   * An aditional object will be pushed into each one of the arrays.
+   * This aditional object will be the alternate method the user can select from
+   * For instance:
+   *    [
+          {
+            "name": "Self Pickup",
+            "costPercent": 0
+          },
+          { <-- This object will be added below.
+            "name": "Otras partes de Jalisco",
+            "costPercent": 10
+          }
+        ]
+  */
+  let responseGdlMethods = [ { name: "Self Pickup", costPercent: 0 } ]
+  let responseJaliscoMethods = [ { name: "Self Pickup", costPercent: 0 } ]
+  let responseMexicoCentroMethods = [ { name: "Self Pickup", costPercent: 0 } ]
+  let responseMexicoInteriorMethods = [ { name: "Self Pickup", costPercent: 0 } ]
 
 
   try {
@@ -119,19 +133,17 @@ router.post(`/available-shipping-methods`, async (request, response) => {
     })
   }
 
-  // Are there shipping methods?
-  //return response.status(200).json(shippingOptions.data)
   if ( shippingOptions.data && shippingOptions.data.length >= 1 ) {
-    //return response.status(200).json(shippingOptions.data)
-    // is Guadalajara Jalisco?
     const guadalajaraMethod = shippingOptions.data.filter(object => { return object.title === 'Envio Guadalajara y Zona Metropolitana' })    
-    responseGdlMethods.push({ name: guadalajaraMethod[0].title, cost: guadalajaraMethod[0].flatRate?.rate || 0 })
+    responseGdlMethods.push({ name: guadalajaraMethod[0].title, costPercent: guadalajaraMethod[0].flatRate?.rate || 0 })
 
     const jaliscoMethod = shippingOptions.data.filter(object => { return object.title === 'Otras partes de Jalisco' })
-    responseJaliscoMethods.push({ name: jaliscoMethod[0].title, cost: jaliscoMethod[0].flatRate?.rate || 0 })
-    
+    responseJaliscoMethods.push({ name: jaliscoMethod[0].title, costPercent: jaliscoMethod[0].flatRate?.rate || 0 })
 
-    return response.status(200).json(responseJaliscoMethods)
+    const mexicoCentroMethod = shippingOptions.data.filter(object => { return object.title === 'Transporte terrestre México' })
+    responseMexicoCentroMethods.push({ name: mexicoCentroMethod[0].title, costPercent: mexicoCentroMethod[0].flatRate?.rate || 0 })
+
+    return response.status(200).json(responseMexicoCentroMethods)
   }
 
 
