@@ -114,8 +114,8 @@ router.post(`/shippingCost`, async (request, response) => {
   // Are there shipping methods?
   //return response.status(200).json(shippingOptions.data)
   if ( shippingOptions.data && shippingOptions.data.length >= 1 ) {
-    //return response.status(200).json(shippingOptions.data)
-    // Jalisto or other state?
+    return response.status(200).json(shippingOptions.data)
+    // Jalisco or other state?
     const otherStates = shippingOptions.data.filter( object => Object.values(object).some(value => value.toString().includes('Jalisco')) )
     return response.status(200).json(otherStates)
   }
