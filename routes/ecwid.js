@@ -91,6 +91,30 @@ router.get(`/shippingMethods`, async (request, response) => {
 router.post(`/shippingCost`, async (request, response) => {
   const address = request.body
 
+  // Get and prepare shipping methods from Ecwid
+  let shippingOptions
+
+  try {
+    shippingOptions = await axios.get(`${process.env.ECWID_API_URL}/profile/shippingOptions`, {
+      method: 'GET',
+      headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: process.env.IDELIKA_ACCESS_TOKEN
+      },
+    })
+    console.log()
+  } catch (error) {
+    shippingOptions = null
+    return response.status(404).json({
+      message: "No se encontraron métodos de envíos en el sistema remoto."
+    })
+  }
+
+  // Jalisco or Other States?
+  console.log(shippingOptions)
+
+
   try {
     if (address) {
       return response.status(200).json({...address, shippingCost: 10})
