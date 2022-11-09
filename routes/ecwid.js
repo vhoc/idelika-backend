@@ -123,7 +123,7 @@ router.post(`/available-shipping-methods`, async (request, response) => {
       return object.title === 'Envio Guadalajara y Zona Metropolitana'
     })
     
-    responseGdlMethods.push({ name: guadalajaraMethod[0].title, cost: guadalajaraMethod.flatRate?.rate || 0 })
+    responseGdlMethods.push({ name: guadalajaraMethod[0].title, cost: guadalajaraMethod[0].flatRate?.rate || 0 })
     
 
     return response.status(200).json(responseGdlMethods)
