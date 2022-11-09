@@ -112,7 +112,7 @@ router.post(`/shippingCost`, async (request, response) => {
   }
 
   // Jalisco or Other States?
-  return response.json(shippingOptions)
+  return response.status(200).json(shippingOptions.data)
 
 
   try {
