@@ -143,7 +143,10 @@ router.post(`/available-shipping-methods`, async (request, response) => {
     const mexicoCentroMethod = shippingOptions.data.filter(object => { return object.title === 'Transporte terrestre México' })
     responseMexicoCentroMethods.push({ name: mexicoCentroMethod[0].title, costPercent: mexicoCentroMethod[0].flatRate?.rate || 0 })
 
-    return response.status(200).json(responseMexicoCentroMethods)
+    const mexicoInteriorMethod = shippingOptions.data.filter(object => { return object.title === 'Transporte terrestre interior de México' })
+    responseMexicoInteriorMethods.push({ name: mexicoInteriorMethod[0].title, costPercent: mexicoInteriorMethod[0].flatRate?.rate || 0 })
+
+    return response.status(200).json(responseMexicoInteriorMethods)
   }
 
 
