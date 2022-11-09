@@ -93,6 +93,9 @@ router.post(`/available-shipping-methods`, async (request, response) => {
   let shippingOptions
 
   let guadalajaraMethod = []
+  let responseGdlMethods = [
+    { name: "Self Pickup", cost: 0 }
+  ]
 
   try {
     shippingOptions = await axios.get(`${process.env.ECWID_API_URL}/profile/shippingOptions`, {
@@ -119,9 +122,11 @@ router.post(`/available-shipping-methods`, async (request, response) => {
     guadalajaraMethod = shippingOptions.data.filter(object => {
       return object.title === 'Envio Guadalajara y Zona Metropolitana'
     })
+
+    responseGdlMethods.push({ name: guadalajaraMethod.title, cost: guadalajaraMethod.flatRate.rate || 0 })
     
 
-    return response.status(200).json(guadalajaraMethod)
+    return response.status(200).json(responseGdlMethods)
   }
 
 
