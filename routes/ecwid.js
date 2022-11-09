@@ -83,4 +83,15 @@ router.get(`/shippingMethods`, async (request, response) => {
   }
 })
 
+/**
+ * Gets the address saved in the device, then uses it to determine
+ * the shipping cost to be applied to that address/
+ */
+
+router.post(`/shippingCost`, async (request, response) => {
+  const address = request.body
+
+  console.log(JSON.stringify(address))
+})
+
 module.exports = router;
