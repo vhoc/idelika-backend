@@ -90,6 +90,7 @@ router.get(`/shippingMethods`, async (request, response) => {
 
 router.post(`/available-shipping-methods`, async (request, response) => {
   const address = request.body
+  return response.status(200).json(address)
 
   // Initiate the container for the shipping options from Ecwid.
   let shippingOptions
