@@ -97,7 +97,6 @@ router.post(`/available-shipping-methods`, async (request, response) => {
     { name: "Self Pickup", cost: 0 }
   ]
 
-  let 
 
   try {
     shippingOptions = await axios.get(`${process.env.ECWID_API_URL}/profile/shippingOptions`, {
