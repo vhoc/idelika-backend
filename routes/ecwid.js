@@ -93,7 +93,11 @@ router.post(`/available-shipping-methods`, async (request, response) => {
   let shippingOptions
 
   //let guadalajaraMethod = []
-  let responseGdlMethods, responseJaliscoMethods = [
+  let responseGdlMethods = [
+    { name: "Self Pickup", cost: 0 }
+  ]
+
+  let responseJaliscoMethods = [
     { name: "Self Pickup", cost: 0 }
   ]
 
