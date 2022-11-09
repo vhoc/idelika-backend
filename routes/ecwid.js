@@ -126,7 +126,7 @@ router.post(`/available-shipping-methods`, async (request, response) => {
     responseGdlMethods.push({ name: guadalajaraMethod[0].title, cost: guadalajaraMethod.flatRate?.rate || 0 })
     
 
-    return response.status(200).json(guadalajaraMethod)
+    return response.status(200).json(responseGdlMethods)
   }
 
 
