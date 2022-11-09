@@ -90,7 +90,6 @@ router.get(`/shippingMethods`, async (request, response) => {
 
 router.post(`/available-shipping-methods`, async (request, response) => {
   const address = request.body
-  return response.status(200).json(address.city)
 
   // Initiate the container for the shipping options from Ecwid.
   let shippingOptions
@@ -162,14 +161,15 @@ router.post(`/available-shipping-methods`, async (request, response) => {
      * and a switch statement seems appropiate for the state.
      */
     if (
-      address.city.toString().toLowerCase().contains('guadalajara') ||
-      address.city.toString().toLowerCase().contains('zapopan') ||
-      address.city.toString().toLowerCase().contains('tonala') ||
-      address.city.toString().toLowerCase().contains('tonalá') ||
-      address.city.toString().toLowerCase().contains('salto') ||
-      address.city.toString().toLowerCase().contains('tlaquepaque') ||
-      address.city.toString().toLowerCase().contains('tlajomulco') &&
-      address.state.toString().toLowerCase() === 'jalisco'
+      address.city.toLowerCase() === 'guadalajara' ||
+      address.city.toLowerCase() === 'zapopan' ||
+      address.city.toLowerCase() === 'tonala' ||
+      address.city.toLowerCase() === 'tonalá' ||
+      address.city.toLowerCase() === 'salto' ||
+      address.city.toLowerCase() === 'el salto' ||
+      address.city.toLowerCase() === 'tlaquepaque' ||
+      address.city.toLowerCase() === 'tlajomulco' &&
+      address.state.toLowerCase() === 'jalisco'
     ) {
       // Return the options for the people living in Guadalajara or its Metropolitan Zone
       return response.status(200).json(responseGdlMethods)
