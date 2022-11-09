@@ -161,14 +161,14 @@ router.post(`/available-shipping-methods`, async (request, response) => {
      * and a switch statement seems appropiate for the state.
      */
     if (
-      address.city.toLowerCase() === 'guadalajara' ||
+      (address.city.toLowerCase() === 'guadalajara' ||
       address.city.toLowerCase() === 'zapopan' ||
       address.city.toLowerCase() === 'tonala' ||
       address.city.toLowerCase() === 'tonalá' ||
       address.city.toLowerCase() === 'salto' ||
       address.city.toLowerCase() === 'el salto' ||
       address.city.toLowerCase() === 'tlaquepaque' ||
-      address.city.toLowerCase() === 'tlajomulco' &&
+      address.city.toLowerCase() === 'tlajomulco') &&
       address.state.toLowerCase() === 'jalisco'
     ) {
       // Return the options for the people living in Guadalajara or its Metropolitan Zone
