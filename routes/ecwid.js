@@ -88,7 +88,7 @@ router.get(`/shippingMethods`, async (request, response) => {
  * the shipping cost to be applied to that address/
  */
 
-router.post(`/shippingCost`, async (request, response) => {
+router.post(`/available-shipping-methods`, async (request, response) => {
   const address = request.body
 
   // Get and prepare shipping methods from Ecwid
