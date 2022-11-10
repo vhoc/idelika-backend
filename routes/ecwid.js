@@ -103,7 +103,7 @@ router.post(`/available-shipping-methods`, async (request, response) => {
    * For instance:
    *    [
           {
-            "name": "Self Pickup",
+            "name": "No necesito envío",
             "costPercent": 0
           },
           { <-- This second object will be added below.
@@ -113,10 +113,10 @@ router.post(`/available-shipping-methods`, async (request, response) => {
         ]
   */
   // For now, they will only contain the Self Pickup option.
-  let responseGdlMethods = [ { name: "Self Pickup", costPercent: 0 } ]
-  let responseJaliscoMethods = [ { name: "Self Pickup", costPercent: 0 } ]
-  let responseMexicoCentroMethods = [ { name: "Self Pickup", costPercent: 0 } ]
-  let responseMexicoInteriorMethods = [ { name: "Self Pickup", costPercent: 0 } ]
+  let responseGdlMethods = [ { name: "No necesito envío", costPercent: 0 } ]
+  let responseJaliscoMethods = [ { name: "No necesito envío", costPercent: 0 } ]
+  let responseMexicoCentroMethods = [ { name: "No necesito envío", costPercent: 0 } ]
+  let responseMexicoInteriorMethods = [ { name: "No necesito envío", costPercent: 0 } ]
 
   // First get all shipment methods from Ecwid and store them in the variable: shippingOptions
   try {
