@@ -89,7 +89,8 @@ router.get(`/shippingMethods`, async (request, response) => {
  */
 
 router.post(`/available-shipping-methods`, async (request, response) => {
-  const address = request.body
+
+
 
   // Initiate the container for the shipping options from Ecwid.
   let shippingOptions
@@ -152,6 +153,13 @@ router.post(`/available-shipping-methods`, async (request, response) => {
 
     const mexicoInteriorMethod = shippingOptions.data.filter(object => { return object.title === 'Transporte terrestre interior de México' })
     responseMexicoInteriorMethods.push({ name: mexicoInteriorMethod[0].title, costPercent: mexicoInteriorMethod[0].flatRate?.rate || 0 })
+
+    // Validate client's address
+    if (!request.body || request.body === {}) {
+      return response.status(200).json(responseMexicoInteriorMethods)
+    }
+  
+    const address = request.body
 
     /**
      * Now we will evaluate two fields from the request:
