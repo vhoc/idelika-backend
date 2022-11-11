@@ -159,6 +159,7 @@ router.post(`/available-shipping-methods`, async (request, response) => {
      * An if conditional will do for the city evaluation
      * and a switch statement seems appropiate for the state.
      */
+    console.log(JSON.stringify(address))
     if (
       (address.city.toLowerCase() === 'guadalajara' ||
       address.city.toLowerCase() === 'zapopan' ||
