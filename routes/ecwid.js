@@ -156,7 +156,7 @@ router.post(`/available-shipping-methods`, async (request, response) => {
 
     // Validate client's address
     if (!request.body || request.body === {}) {
-      console.log(`No address received from the client. Responding with the default shipping options.`)
+      console.log(`[INFORMATION]: No address received from the client. Responding with the default shipping options.`)
       return response.status(200).json(responseMexicoInteriorMethods)
     }
   
