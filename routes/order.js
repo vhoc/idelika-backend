@@ -38,6 +38,7 @@ router.post('/', async (req, res) => {
       items: req.body.items,
       privateAdminNotes: req.body.privateAdminNotes,
     }
+    console.log(`Order received: ${JSON.stringify(order)}`)
     return res.json(order)
   } catch (error) {
     console.error(error)

@@ -129,7 +129,7 @@ router.post(`/available-shipping-methods`, async (request, response) => {
           Authorization: process.env.IDELIKA_ACCESS_TOKEN
       },
     })
-    console.log()
+    //console.log()
   } catch (error) {
     shippingOptions = null
     return response.status(404).json({
@@ -168,7 +168,7 @@ router.post(`/available-shipping-methods`, async (request, response) => {
      * An if conditional will do for the city evaluation
      * and a switch statement seems appropiate for the state.
      */
-    console.log(JSON.stringify(address))
+    //console.log(JSON.stringify(address))
     if (
       (address.city.toLowerCase() === 'guadalajara' ||
       address.city.toLowerCase() === 'zapopan' ||
