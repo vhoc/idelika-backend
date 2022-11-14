@@ -42,7 +42,7 @@ router.post('/', async (req, res) => {
       shippingPerson: req.body.shippingPerson,
       orderComments: req.body.orderComments,
     }
-    console.log(`Order received: ${order}`)
+    console.log(order)
 
     axios.post( `${process.env.ECWID_API_URL}/orders`, order, {
       headers: {
@@ -52,8 +52,8 @@ router.post('/', async (req, res) => {
           Authorization: process.env.IDELIKA_ACCESS_TOKEN
       },
   } ).then(data => {
-    //console.log(data)
-    return res.json(data)
+    console.log(data)
+    return res.status(201).json(data)
   }).catch(error => {
     console.error(error)
     res.status(500).json(error)
