@@ -38,6 +38,8 @@ router.post('/', async (req, res) => {
       paymentMethod: req.body.paymentMethod,
       paymentStatus: req.body.paymentStatus,
       items: req.body.items,
+      billingPerson: req.body.billingPerson,
+      shippingPerson: req.body.shippingPerson,
       privateAdminNotes: req.body.privateAdminNotes,
     }
     console.log(`Order received: ${order}`)
