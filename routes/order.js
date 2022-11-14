@@ -34,12 +34,13 @@ router.post('/', async (req, res) => {
       shippingOption: req.body.shippingOption,
       subtotal: req.body.subtotal,
       total: req.body.total,
+      discount: req.body.discount,
       paymentMethod: req.body.paymentMethod,
       paymentStatus: req.body.paymentStatus,
       items: req.body.items,
       privateAdminNotes: req.body.privateAdminNotes,
     }
-    console.log(`Order received: ${JSON.stringify(order)}`)
+    console.log(`Order received: ${order}`)
 
     axios.post( `${process.env.ECWID_API_URL}/orders`, order, {
       headers: {
