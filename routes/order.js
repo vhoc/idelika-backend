@@ -41,17 +41,20 @@ router.post('/', async (req, res) => {
     }
     console.log(`Order received: ${JSON.stringify(order)}`)
 
-    const response = axios.post( `${process.env.ECWID_API_URL}/orders`, order, {
+    axios.post( `${process.env.ECWID_API_URL}/orders`, order, {
       headers: {
           "method": 'POST',
           Accept: 'application/json',
           'Content-Type': 'application/json',
           Authorization: process.env.IDELIKA_ACCESS_TOKEN
       },
-  } )
-
-  console.log(response.data)
-  return res.json(response.data)
+  } ).then(data => {
+    console.log(data)
+    return res.json(data)
+  }).catch(error => {
+    console.error(error)
+    res.status(500).json(error)
+  })
   } catch (error) {
     console.error(error)
     res.status(500).json(error)
