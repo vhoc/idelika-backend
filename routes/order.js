@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
       items: req.body.items,
       billingPerson: req.body.billingPerson,
       shippingPerson: req.body.shippingPerson,
-      privateAdminNotes: req.body.privateAdminNotes,
+      orderComments: req.body.orderComments,
     }
     //console.log(`Order received: ${order}`)
 
