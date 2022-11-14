@@ -1,6 +1,7 @@
 require( 'dotenv' ).config()
 const express = require( 'express' )
 const router = express.Router()
+const axios = require('axios')
 
 router.post('/', async (req, res) => {
   /**
@@ -39,7 +40,18 @@ router.post('/', async (req, res) => {
       privateAdminNotes: req.body.privateAdminNotes,
     }
     console.log(`Order received: ${JSON.stringify(order)}`)
-    return res.json(order)
+
+    const response = axios.post( `${process.env.ECWID_API_URL}/orders`, order, {
+      headers: {
+          "method": 'POST',
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: process.env.IDELIKA_ACCESS_TOKEN
+      },
+  } )
+
+  console.log(response.data)
+  return res.json(response.data)
   } catch (error) {
     console.error(error)
     res.status(500).json(error)
