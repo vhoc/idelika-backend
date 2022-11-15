@@ -168,7 +168,8 @@ router.patch( '/:id', async ( request, response ) => {
         usuario.phone = request.body.phone || usuario.phone
         usuario.type = request.body.type || usuario.type
         usuario.save()
-
+        
+        console.log(request.params.id)
         // Then, update the corresponding user on Ecwid.
         // Verify user's existence on Ecwid API by their email
         /*
