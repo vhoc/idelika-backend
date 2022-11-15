@@ -160,7 +160,7 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
 
 // Update one
 router.patch( '/:id', async ( request, response ) => {
-    const usuario = await Usuario.findOne( { email: request.body.email } )
+    const usuario = await Usuario.findOne( { _id: request.params.id } )
     if( usuario == null ) return response.status(404).json( { status: 404, message: "No se encontró el usuario" } )
 
     try {
