@@ -171,6 +171,7 @@ router.patch( '/:id', async ( request, response ) => {
 
         // Then, update the corresponding user on Ecwid.
         // Verify user's existence on Ecwid API by their email
+        /*
         const ecwidUser = await axios.get( `${process.env.ECWID_API_URL}/customers/${request.params.id}`, {
             method: 'GET',
             headers: {
@@ -197,7 +198,7 @@ router.patch( '/:id', async ( request, response ) => {
             })
         } else {
             console.log(`No se encontró usuario en Ecwid con id ${request.params.id} para actualizar.`)
-        }
+        }*/
 
         return response.status(200).json({
             userId: usuario._id,
