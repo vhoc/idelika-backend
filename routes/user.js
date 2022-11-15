@@ -176,6 +176,9 @@ router.patch( '/:id', async ( request, response ) => {
             email: usuario.email,
             phone: usuario.phone,
             name: usuario.name,
+            active: usuario.active,
+            accessToken: usuario.accessToken,
+            refreshToken: usuario.refreshToken
         })
 
         // PENDING: UPDATE DATA ON ECWID
