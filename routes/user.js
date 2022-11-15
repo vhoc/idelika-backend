@@ -169,7 +169,7 @@ router.patch( '/:id', async ( request, response ) => {
         usuario.type = request.body.type || usuario.type
         usuario.save()
         
-        console.log(request.params.id)
+        console.log(request.body.ecwidUserId)
         // Then, update the corresponding user on Ecwid.
         // Verify user's existence on Ecwid API by their email
         /*
