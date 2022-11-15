@@ -165,7 +165,7 @@ router.patch( '/:id', async ( request, response ) => {
 
     try {
         usuario.name = request.body.name || usuario.name
-        usuario.phone = request.body.name || usuario.phone
+        usuario.phone = request.body.phone || usuario.phone
         usuario.type = request.body.type || usuario.type
         usuario.save()
 
