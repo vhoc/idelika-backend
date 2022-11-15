@@ -169,11 +169,11 @@ router.patch( '/:id', async ( request, response ) => {
         usuario.type = request.body.type || usuario.type
         usuario.save()
         
-        console.log(request.body.ecwidUserId)
+        //console.log(request.body.ecwidUserId)
         // Then, update the corresponding user on Ecwid.
         // Verify user's existence on Ecwid API by their email
-        /*
-        const ecwidUser = await axios.get( `${process.env.ECWID_API_URL}/customers/${request.params.id}`, {
+        
+        const ecwidUser = await axios.get( `${process.env.ECWID_API_URL}/customers/${request.body.ecwidUserId}`, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -184,7 +184,7 @@ router.patch( '/:id', async ( request, response ) => {
         } )
 
         if (ecwidUser) {
-            await axios.put(`${process.env.ECWID_API_URL}/customers/${request.params.id}`, {
+            await axios.put(`${process.env.ECWID_API_URL}/customers/${request.body.ecwidUserId}`, {
                 billingPerson: {
                     name: request.body.name,
                     phone: request.body.phone,
@@ -198,8 +198,8 @@ router.patch( '/:id', async ( request, response ) => {
                 },
             })
         } else {
-            console.log(`No se encontró usuario en Ecwid con id ${request.params.id} para actualizar.`)
-        }*/
+            console.log(`No se encontró usuario en Ecwid con id ${request.body.ecwidUserId} para actualizar.`)
+        }
 
         return response.status(200).json({
             userId: usuario._id,
