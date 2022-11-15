@@ -159,8 +159,30 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
 } )
 
 // Update one
-router.patch( '/:id', ( request, response ) => {
-    response.send( `Update one user: ${ request.params.id }` )
+router.patch( '/:id', async ( request, response ) => {
+    const usuario = await Usuario.findOne( { email: request.body.email } )
+    if( usuario == null ) return response.status(404).json( { status: 404, message: "No se encontró el usuario" } )
+
+    try {
+        usuario.name = request.body.name || usuario.name
+        usuario.phone = request.body.name || usuario.phone
+        usuario.type = request.body.type || usuario.type
+        usuario.save()
+
+        return response.status(200).json({
+            userId: usuario._id,
+            ecwidUserId: usuario.ecwidUserId,
+            type: usuario.type,
+            email: usuario.email,
+            phone: usuario.phone,
+            name: usuario.name,
+        })
+
+        // PENDING: UPDATE DATA ON ECWID
+    } catch (error) {
+        console.error( error )
+        return response.status(500).json( { status: 500, message: error } )
+    }
 } )
 
 // Delete one 
