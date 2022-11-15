@@ -158,7 +158,7 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
     }
 } )
 
-// Update one
+// Update one user
 router.patch( '/:id', async ( request, response ) => {
     const usuario = await Usuario.findOne( { _id: request.params.id } )
     if( usuario == null ) return response.status(404).json( { status: 404, message: "No se encontró el usuario" } )
@@ -168,6 +168,36 @@ router.patch( '/:id', async ( request, response ) => {
         usuario.phone = request.body.phone || usuario.phone
         usuario.type = request.body.type || usuario.type
         usuario.save()
+
+        // Then, update the corresponding user on Ecwid.
+        // Verify user's existence on Ecwid API by their email
+        const ecwidUser = await axios.get( `${process.env.ECWID_API_URL}/customers/${request.params.id}`, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: process.env.IDELIKA_ACCESS_TOKEN
+            },
+            //params: { email: request.body.email }
+        } )
+
+        if (ecwidUser) {
+            await axios.put(`${process.env.ECWID_API_URL}/customers/${request.params.id}`, {
+                billingPerson: {
+                    name: request.body.name,
+                    phone: request.body.phone,
+                },
+            }, {
+                method: 'PUT',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    Authorization: process.env.IDELIKA_ACCESS_TOKEN
+                },
+            })
+        } else {
+            console.log(`No se encontró usuario en Ecwid con id ${request.params.id} para actualizar.`)
+        }
 
         return response.status(200).json({
             userId: usuario._id,
