@@ -177,7 +177,7 @@ router.get( `/activate/:usuarioId/:token`, async ( request, response ) => {
         user.save()
         token.delete()
         //return response.redirect( `${ process.env.FRONTEND_URL }activacion?status=valid` )
-        return response.redirect( `${ process.env.FRONTEND_URL }activacion/valido` )
+        return response.redirect( `${ process.env.FRONTEND_URL }activacion/valido?name=${user.name}` )
     } catch ( error ) {
         console.log( error )
         return response.send( `Ha ocurrido un error.` )
