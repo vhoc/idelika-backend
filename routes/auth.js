@@ -68,7 +68,7 @@ router.post( '/password-reset', async ( req, res ) => {
     try {
         const schema = Joi.object({ email: Joi.string().email().required() });
         const { error } = schema.validate(req.body);
-        if (error) return res.status(400).send(error.details[0].message);
+        if (error) return res.status(400).json({ status: 400, message: error.details[0].message });
 
         const user = await Usuario.findOne({ email: req.body.email });
         if (!user)
