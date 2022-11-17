@@ -132,7 +132,7 @@ router.post( "/password-change/:usuarioId", validatePassword, async ( request, r
             password: Joi.string().required(),
             passwordConfirmation: Joi.string().required()
         })
-        console.log(request.body)
+        //console.log(request.body)
         const { error } = schema.validate( request.body )
         if( error ) return response.status(400).json( { status: 400, message: error.details[0].message } )
 
