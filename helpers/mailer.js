@@ -67,9 +67,9 @@ const passResetMail = async ( address, usuario, link ) => {
     })
 
     const mailOptions = {
-        from: 'no-responder@suempresa.us',
+        from: process.env.MAIL_FROM,
         to: address,
-        subject: "Restablece tu Contraseña de Session Scheduler",
+        subject: "Restablece tu Contraseña de Idelika",
         text: `Visita este enlace para restablecer tu contraseña: ${ link }.`,
         html: htmlToSend,
     }
