@@ -73,7 +73,7 @@ router.post( '/password-reset', async ( req, res ) => {
 
         const user = await Usuario.findOne({ email: req.body.email });
         if (!user)
-            return res.status(404).json({ status: 404, message: "El usuario no existe con ese correo." });
+            return res.status(404).json({ status: 404, message: "No existe un usuario con ese correo." });
 
         let token = await Token.findOne({ usuarioId: user._id });
         if (!token) {
