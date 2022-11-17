@@ -98,27 +98,27 @@ router.post( "/password-reset/:usuarioId/:token", async ( req, res ) => {
     try {
         const schema = Joi.object({ password: Joi.string().required() });
         const { error } = schema.validate(req.body);
-        if (error) return res.status(400).send(error.details[0].message);
+        if (error) return res.status(400).json({ status: 400, message: error.details[0].message});
 
         const user = await Usuario.findById(req.params.usuarioId);
-        if (!user) return res.status(400).send("invalid link or expired");
+        if (!user) return res.status(400).json({ status: 400, message: "Enlace de restauración inválido o expirado."});
 
         const token = await Token.findOne({
             usuarioId: user._id,
             token: req.params.token,
         });
-        if (!token) return res.status(400).send("Invalid link or expired");
+        if (!token) return res.status(400).json({ status: 400, message: "Enlace de restauración inválido o expirado."});
 
         const salt = await bcrypt.genSalt()
         const hashedPassword = await bcrypt.hash( req.body.password, salt )
 
         user.password = hashedPassword;
-        await user.save();
-        await token.delete();
+        //await user.save();
+        //await token.delete();
 
-        res.send("password reset sucessfully.");
+        res.status(200).json({ status: 200, message: "La contraseña ha sido renovada con éxito."});
     } catch (error) {
-        res.send("An error occured");
+        res.status(500).json({ status: 500, message: "An error occured on the service. Try again later."});
         console.log(error);
     }
 } )
