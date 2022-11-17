@@ -113,8 +113,8 @@ router.post( "/password-reset/:usuarioId/:token", async ( req, res ) => {
         const hashedPassword = await bcrypt.hash( req.body.password, salt )
 
         user.password = hashedPassword;
-        //await user.save();
-        //await token.delete();
+        await user.save();
+        await token.delete();
 
         res.status(200).json({ status: 200, message: "La contraseña ha sido renovada con éxito."});
     } catch (error) {
