@@ -123,23 +123,27 @@ router.post( "/password-reset/:usuarioId/:token", async ( req, res ) => {
 } )
 
 // Password Change
-// TODO: Validar contraseña (longitud)
+// This function updates the user's password on this backend, not on Ecwid.
 router.post( "/password-change/:usuarioId", validatePassword, async ( request, response ) => {
     try {
         const schema = Joi.object({
-            input: Joi.string().required(),
+            // Enable this if you require the current password validation.
+            //input: Joi.string().required(),
             password: Joi.string().required(),
             passwordConfirmation: Joi.string().required()
         })
+        console.log(request.body)
         const { error } = schema.validate( request.body )
         if( error ) return response.status(400).json( { status: 400, message: error.details[0].message } )
 
         const user = await Usuario.findById( request.params.usuarioId )
         if ( !user ) return response.status(404).json( { status: 404, message: "No se encontró el usuario especificado." } )
 
+        /*
+        * Enable this if you require the current password validation.
         if ( ! await bcrypt.compare( request.body.input, user.password ) ) {
             return response.status(401).json( { status: 401, message: "Credenciales inválidas" } )
-        }
+        }*/
 
         const salt = await bcrypt.genSalt()
         const hashedPassword = await bcrypt.hash( request.body.password, salt )
