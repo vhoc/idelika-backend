@@ -72,7 +72,7 @@ router.post( '/password-reset', async ( req, res ) => {
 
         const user = await Usuario.findOne({ email: req.body.email });
         if (!user)
-            return res.status(400).send("user with given email doesn't exist");
+            return res.status(404).json({ status: 404, message: "El usuario no existe con ese correo." });
 
         let token = await Token.findOne({ usuarioId: user._id });
         if (!token) {
@@ -85,9 +85,9 @@ router.post( '/password-reset', async ( req, res ) => {
         const link = `${process.env.FRONTEND_URL}recover-account/${user._id}/${token.token}?email=${ user.email }`;
         await passResetMail(user.email, user, link);
 
-        res.send("password reset link sent to your email account");
+        res.status(200).json({ status: 200, message: "El enlace de recuperación de cuenta se ha enviado a su correo." });
     } catch (error) {
-        res.send("An error occured");
+        res.status(500).json({ status: 500, message: "Ha ocurrido un error en el servicio." });
         console.log(error);
     }
 } )
