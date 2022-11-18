@@ -95,8 +95,8 @@ router.post( '/password-reset', async ( req, res ) => {
 
 // Password Reset SETP 2 - Reset user password\
 router.post( "/password-reset/:usuarioId/:token", async ( req, res ) => {
-    console.log(req.params.usuarioId)
-    console.log(req.params.token)
+    //console.log(req.params.usuarioId)
+    //console.log(req.params.token)
     try {
         const schema = Joi.object({ password: Joi.string().required() });
         const { error } = schema.validate(req.body);
