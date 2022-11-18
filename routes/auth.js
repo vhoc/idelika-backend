@@ -95,16 +95,15 @@ router.post( '/password-reset', async ( req, res ) => {
 
 // Password Reset SETP 2 - Reset user password\
 router.post( "/password-reset/:usuarioId/:token", async ( req, res ) => {
-    console.log(usuarioId)
-    console.log(token)
+    console.log(req.params.usuarioId)
+    console.log(req.params.token)
     try {
         const schema = Joi.object({ password: Joi.string().required() });
         const { error } = schema.validate(req.body);
         if (error) return res.status(400).json({ status: 400, message: error.details[0].message});
 
-        const user = await Usuario.findById(req.params.usuarioId);
-        
-        if (!user) return res.status(400).json({ status: 400, message: "Enlace de restauración inválido o expirado."});
+        const user = await Usuario.findById(req.params.usuarioId);        
+        if (!user) return res.status(404).json({ status: 404, message: "No se encontró registro de éste usuario."});
 
         const token = await Token.findOne({
             usuarioId: user._id,
