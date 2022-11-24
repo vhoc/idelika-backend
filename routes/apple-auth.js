@@ -1,49 +1,43 @@
 const express = require( 'express' )
 const router = express.Router()
-const fs = require("fs");
-const AppleAuth = require("apple-auth");
 const axios = require('axios')
 const jwt = require( `jsonwebtoken` )
 const { generateAccessToken } = require( '../helpers/generateAccessToken' )
 const RefreshToken = require( `../models/refreshToken` )
 const Usuario = require( `../models/user` )
-var path = require('path');
-
-
-const config = {
-    "client_id": process.env.APPLE_CLIENT_ID,
-    "team_id": process.env.APPLE_TEAM_ID,
-    "key_id": process.env.APPLE_KEY_ID,
-    "redirect_uri": process.env.APPLE_REDIRECT_URI,
-    "scope": "name email"
-}
-
-const keyPath = path.join(__dirname, '..', 'config', process.env.APPLE_AUTH_KEY);
-let auth = new AppleAuth(
-    config,
-    fs.readFileSync(keyPath).toString(), //read the key file
-    "text"
-  );
 
 router.post("/login", async (request, response) => {
+    console.log(request.body)
+    const {identityToken} = request.body;
+    let appleResponse, name, email, user
+    if (request.body.user) { 
+        name = request.body.user.name;
+        email = request.body.user.email;
+    }
     try {
-        //authenticate our code we recieved from apple login with our key file
-        const appleResponse = await auth.accessToken(request.body.authorization.code);
-        // decode our token
-        const idToken = jwt.decode(appleResponse.id_token);
-        
-        //extract email from idToken
-        const email = idToken.email;
-        let name
-        
-        //check if user exists in the returned response from Apple
-        //Apple returns the user only once, so you might want to save their details
-        // in a database for future logins
-        if (request.body.user) { 
-            name = JSON.parse(request.body.user).name;
-        }
-        let user
-
+        const clientId = process.env.APPLE_CLIENT_ID;
+         // verify token (will throw error if failure)
+         appleResponse = {sub: "id"} /*await appleSignin.verifyIdToken(identityToken, {
+             audience: clientId,
+             ignoreExpiration: true, // ignore token expiry (never expires)
+         });*/
+         console.log(appleResponse);
+         const { sub: appleUserId } = appleResponse;
+         if(appleUserId !== request.body.appleUserId) {
+            //user ids don't match
+            return response.status(422).json({
+                status: 422,
+                message: "Hubo un error al validar las credenciales.",
+            })
+         }
+    } catch (e) {
+        console.log(e)
+        return response.status(422).json({
+            status: 422,
+            message: "Hubo un error al validar las credenciales.",
+        })
+    }
+    try{
         // Verify user's existence on Ecwid API by their email
         const ecwidUser = await axios.get( `${process.env.ECWID_API_URL}/customers`, {
             method: 'GET',

@@ -13,7 +13,7 @@
   "dependencies": {
     "@azure/msal-node": "^1.9.0",
     "@microsoft/microsoft-graph-client": "^3.0.0",
-    "apple-auth": "^1.0.7",
+    "apple-signin-auth": "^1.7.4",
     "axios": "^0.27.2",
     "bcrypt": "^5.0.1",
     "connect-flash": "^0.1.1",
