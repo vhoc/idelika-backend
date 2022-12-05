@@ -17,10 +17,10 @@ router.post("/login", async (request, response) => {
     try {
         const clientId = process.env.APPLE_CLIENT_ID;
          // verify token (will throw error if failure)
-         appleResponse = {sub: "id"} /*await appleSignin.verifyIdToken(identityToken, {
+         appleResponse = await appleSignin.verifyIdToken(identityToken, {
              audience: clientId,
              ignoreExpiration: true, // ignore token expiry (never expires)
-         });*/
+         });
          console.log(appleResponse);
          const { sub: appleUserId } = appleResponse;
          if(appleUserId !== request.body.appleUserId) {
