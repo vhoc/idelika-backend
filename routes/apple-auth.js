@@ -1,28 +1,51 @@
 const express = require( 'express' )
 const router = express.Router()
 const axios = require('axios')
+const NodeRSA = require('node-rsa');
 const jwt = require( `jsonwebtoken` )
 const { generateAccessToken } = require( '../helpers/generateAccessToken' )
 const RefreshToken = require( `../models/refreshToken` )
 const Usuario = require( `../models/user` )
 
+async function _getApplePublicKeys() {
+return axios
+    .request({
+    method: 'GET',
+    url: 'https://appleid.apple.com/auth/keys',
+    })
+    .then(response => response.data.keys)
+}
+
+const getAppleUserId = async token => {
+    const keys = await _getApplePublicKeys()
+    const decodedToken = jwt.decode(token, { complete: true })
+    const kid = decodedToken.header.kid
+    const key = keys.find(k => k.kid === kid)
+
+    const pubKey = new NodeRSA();
+    pubKey.importKey(
+        { n: Buffer.from(key.n, 'base64'), e: Buffer.from(key.e, 'base64') },
+        'components-public'
+    );
+    const userKey = pubKey.exportKey(['public']);
+
+    return jwt.verify(token, userKey, {
+        algorithms: 'RS256',
+    })
+};
+
 router.post("/login", async (request, response) => {
-    console.log(request.body)
-    const {identityToken} = request.body;
+    const {identityToken} = request.body
     let appleResponse, name, email, user
     if (request.body.user) { 
-        name = request.body.user.name;
-        email = request.body.user.email;
+        name = request.body.user.name
+        email = request.body.user.email
     }
     try {
-        const clientId = process.env.APPLE_CLIENT_ID;
-         // verify token (will throw error if failure)
-         appleResponse = await appleSignin.verifyIdToken(identityToken, {
-             audience: clientId,
-             ignoreExpiration: true, // ignore token expiry (never expires)
-         });
+        appleResponse = await getAppleUserId(identityToken)
          console.log(appleResponse);
-         const { sub: appleUserId } = appleResponse;
+         const { sub: appleUserId } = appleResponse
+         email = appleResponse.email
          if(appleUserId !== request.body.appleUserId) {
             //user ids don't match
             return response.status(422).json({
