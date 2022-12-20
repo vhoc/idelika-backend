@@ -23,7 +23,7 @@ const getUserDiscount = async (customerId, email) => {
 
         return { type: calculate.data.discountInfo[0].type, value: calculate.data.discountInfo[0].value }
     } catch(error) {
-        console.log(`Error fetching user's discount.`)
+        //console.log(`Error fetching user's discount.`)
         return { type: "PERCENT", value: 0 }
     }
     
