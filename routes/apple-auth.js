@@ -43,16 +43,16 @@ router.post("/login", async (request, response) => {
     }
     try {
         appleResponse = await getAppleUserId(identityToken)
-         console.log(appleResponse);
-         const { sub: appleUserId } = appleResponse
-         email = appleResponse.email
-         if(appleUserId !== request.body.appleUserId) {
+        console.log(appleResponse);
+        const { sub: appleUserId } = appleResponse
+        email = appleResponse.email
+        if(appleUserId !== request.body.appleUserId) {
             //user ids don't match
             return response.status(422).json({
                 status: 422,
                 message: "Hubo un error al validar las credenciales.",
             })
-         }
+        }
     } catch (e) {
         console.log(e)
         return response.status(422).json({
@@ -79,7 +79,7 @@ router.post("/login", async (request, response) => {
             if (!user) {
                 user = new Usuario({
                     ecwidUserId: ecwidUser.data.items[0].id,
-                    name,
+                    name: name || email,
                     type: 'Otro',
                     email,
                     phone: '',
