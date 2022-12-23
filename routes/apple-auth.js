@@ -98,7 +98,7 @@ router.post("/login", async (request, response) => {
                     email: email,
                     customerGroupId: 0,
                     billingPerson: {
-                        name: name,
+                        name: name || email,
                     }
                 }, {
                     headers: {
@@ -113,7 +113,7 @@ router.post("/login", async (request, response) => {
                 if (!user) {
                     user = new Usuario({
                         ecwidUserId: ecwidResponse.data.id,
-                        name,
+                        name: name || email,
                         type: 'Otro',
                         email,
                         phone: '',
