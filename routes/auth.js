@@ -164,7 +164,7 @@ router.get( `/activate/:usuarioId/:token`, async ( request, response ) => {
     try {
         const user = await Usuario.findById( request.params.usuarioId )
         if ( !user ) {
-            console.log( `Invalid activation token received` )
+            console.log( `No user has been found for this token` )
             //return response.redirect( `${ process.env.FRONTEND_URL }activacion?status=invalid` )
             return response.redirect( `${ process.env.FRONTEND_URL }activacion/invalido` )
         }
@@ -174,7 +174,7 @@ router.get( `/activate/:usuarioId/:token`, async ( request, response ) => {
             token: request.params.token,
         })
         if ( !token ) {
-            console.log( `Invalid activation token received` )
+            console.log( `The specified token has not been found` )
              //return response.redirect( `${ process.env.FRONTEND_URL }activacion?status=invalid` )
              return response.redirect( `${ process.env.FRONTEND_URL }activacion/invalido` )
         }
