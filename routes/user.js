@@ -158,6 +158,78 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
     }
 } )
 
+// Delete the user
+router.delete( '/:id', async (request, response) => {
+
+    try {
+        const usuario = await Usuario.findOne( { _id: request.params.id } )
+
+        // Check user
+        if( usuario == null ) return response.status(404).json( { status: 404, message: "No se encontró el usuario" } )
+
+        // Check authorization header existence
+        if( !request.headers.authorization ) response.status(403).json( { status: 403, message: "Acceso no autorizado (#1)" } )
+
+        const refreshToken = request.headers.authorization.split(' ')[1]
+        console.log(`Received token: ${token}`)
+
+        // Check password existence
+        if( !request.headers.password ) response.status(403).json( {status: 403, message: "Acceso no autorizado (#2)" } )
+
+        // Check password validity
+        if ( ! await bcrypt.compare( request.headers.password, usuario.password ) ) {            
+            console.log( `Authentication FAILED for deleting user ${ usuario.email } from ${ request.ip  }` )
+            return response.status(401).json( { status: 401, message: "Acceso no autorizado (#3)" } )
+        }
+
+        // Check token validity
+        if ( refreshToken == null ) return response.status(401).json( {status: 401, message: "Acceso no autorizado (#4)" } )
+
+        const savedToken = await RefreshToken.findOne( { refreshToken }, 'refreshToken' )
+        if ( savedToken == null ) return response.sendStatus( 204 )
+        if ( refreshToken !== savedToken.refreshToken ) return response.status(403).json( {status: 403, message: "Acceso no autorizado (#5)" } )
+
+        // Delete user (customer) from Ecwid
+        // Verify user's existence on Ecwid API by their email
+        const ecwidUser = await axios.get( `${process.env.ECWID_API_URL}/customers`, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: process.env.IDELIKA_ACCESS_TOKEN
+            },
+            params: { email: request.body.email }
+        } )
+
+        if (ecwidUser.data.items.length > 0) {
+            // If there is a user, delete the user.
+            axios.delete(`${process.env.ECWID_API_URL}/customers/${usuario.ecwidUserId}`, {
+                method: 'DELETE',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    Authorization: process.env.IDELIKA_ACCESS_TOKEN
+                }
+            }).then((response) => {
+                console.log(response, `Usuario eliminado de Ecwid.`)
+            }).catch((error) => {
+                console.log(error, 'Hubo un error al intentar eliminar el usuario de ecwid.')
+            })
+        } else {
+            // If no user is found in Ecwid, just log it.
+            console.log(`No user found in Ecwid with ID ${usuario.ecwidUserId}.`)
+        }
+
+        await RefreshToken.deleteOne( { refreshToken: refreshToken } )
+        await usuario.deleteOne( { _id: request.params.id } )
+        return response.status(204).json( {status: 204, message: "Tu usuario ha sido eliminado. Esperamos volver a verte pronto." } )
+    } catch (error) {
+        console.log(error, `Hubo un error en el proceso de eliminación del usuario ID: ${request.params.id}.`)
+        return response.status(500).json( { status: 500, error } )
+    }    
+
+} )
+
 // Update one user
 router.patch( '/:id', async ( request, response ) => {
     const usuario = await Usuario.findOne( { _id: request.params.id } )
