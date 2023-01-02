@@ -171,7 +171,7 @@ router.delete( '/:id', async (request, response) => {
         if( !request.headers.authorization ) response.status(403).json( { status: 403, message: "Acceso no autorizado (#1)" } )
 
         const refreshToken = request.headers.authorization.split(' ')[1]
-        console.log(`Received token: ${token}`)
+        console.log(`Received token: ${refreshToken}`)
 
         // Check password existence
         if( !request.headers.password ) response.status(403).json( {status: 403, message: "Acceso no autorizado (#2)" } )
