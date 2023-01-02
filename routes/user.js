@@ -179,7 +179,7 @@ router.delete( '/:id', async (request, response) => {
         // Check password validity
         if ( ! await bcrypt.compare( request.headers.password, usuario.password ) ) {            
             console.log( `Authentication FAILED for deleting user ${ usuario.email } from ${ request.ip  }` )
-            return response.status(401).json( { status: 401, message: "Acceso no autorizado (#3)" } )
+            return response.status(401).json( { status: 401, message: "La contraseña es incorrecta." } )
         }
 
         // Check token validity
