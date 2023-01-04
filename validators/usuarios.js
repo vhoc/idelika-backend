@@ -1,6 +1,6 @@
 const { check } = require( 'express-validator' )
 const { validateResult } = require( '../helpers/validateHelper' )
-const Usuario = require( `../models/usuario` )
+const Usuario = require( `../models/user` )
 const LicenseKey = require( `../models/licenseKey` )
 
 const validateCreate = [
@@ -18,10 +18,15 @@ const validateCreate = [
         .custom( value => {
             return Usuario.findOne( { email: value } ).then( usuario => {
                 if ( usuario ) {
-                    return Promise.reject( 'El usuario ya fue registrado anteriormente.' )
+                    return Promise.reject( 'El usuario ya fue registrado anteriormente, por favor regresa y cambia el correo electrónico para tu nuevo usuario.' )
                 }
             } )
         } ),
+
+    check( 'phone' )
+        .exists({checkFalsy: true}).withMessage(`El número telefónico no puede estar vacío.`)
+        .not().isEmpty().withMessage( `El nombre no puede estar en blanco.` )
+        .matches(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/).withMessage(`El número telefónico debe tener el formato correcto`),
     
     check( 'password' )
         .exists({ checkFalsy: true }).withMessage( `Se requiere definir una contraseña.` )

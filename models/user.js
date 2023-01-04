@@ -1,7 +1,9 @@
 const mongoose = require( `mongoose` )
-//const AutoIncrement = require('mongoose-sequence')(mongoose);
 
-const usuarioSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
+    ecwidUserId: {
+        type: Number,
+    },
     email: {
         type: String,
         required: true,
@@ -9,26 +11,20 @@ const usuarioSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        //required: true,
     },
     name:  {
         type: String,
         required: true,
     },
-    lastName: {
+    phone: {
         type: String,
-        required: true,
+        //required: true,
     },
     type: {
         type: String,
         required: true,
         enum: ['Arquitecto', 'Interiorista', 'Otro'],
-    },
-    tier: {
-        type: Number,
-        required: true,
-        default: 0,
-        enum: [0, 1, 2, 3, 4, 5],
     },
     active: {
         type: Boolean,
@@ -37,6 +33,6 @@ const usuarioSchema = new mongoose.Schema({
     },
 })
 
-usuarioSchema.set( 'timestamps', true )
+userSchema.set( 'timestamps', true )
 //usuarioSchema.plugin(AutoIncrement, {inc_field: '_id'});
-module.exports = mongoose.model( `Usuario`, usuarioSchema, 'usuarios' )
+module.exports = mongoose.model( `User`, userSchema, 'users' )

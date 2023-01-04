@@ -1,22 +1,27 @@
 require( 'dotenv' ).config()
 const session = require('express-session');
 const flash = require('connect-flash');
-const msal = require("@azure/msal-node");
+//const msal = require("@azure/msal-node");
 const connection = require( `./db` )
 
 const cors = require( `cors` )
 const express = require( "express" )
 
-const outlookAuthRouter = require('./routes/outlook-auth');
+//const outlookAuthRouter = require('./routes/outlook-auth');
 const indexRouter = require( './routes/index' )
 const authRouter = require( `./routes/auth` )
-const userRouter = require( "./routes/usuarios" )
+const googleRouter = require( "./routes/google-auth" )
+const appleRouter = require( "./routes/apple-auth" )
+const userRouter = require( "./routes/user" )
+const stripeRouter = require( "./routes/stripe" )
+const orderRouter = require( `./routes/order` )
+const ecwidRouter = require( `./routes/ecwid` )
 
-const PreferenciaController = require( `./controllers/PreferenciaController` )
-const FormularioController = require( `./controllers/FormularioController` )
-const LicenseKeyController = require( `./controllers/LicenseKeyController` )
-const ZoomController = require( `./controllers/ZoomController` )
-const CategoryController = require( `./controllers/CategoryController` )
+//const PreferenciaController = require( `./controllers/PreferenciaController` )
+//const FormularioController = require( `./controllers/FormularioController` )
+//const LicenseKeyController = require( `./controllers/LicenseKeyController` )
+//const ZoomController = require( `./controllers/ZoomController` )
+//const CategoryController = require( `./controllers/CategoryController` )
 
 const app = express()
 app.use( cors() )
@@ -64,6 +69,7 @@ app.use(function(req, res, next) {
 app.locals.users = {};
 
 // MSAL config
+/*
 const msalConfig = {
   auth: {
     clientId: process.env.OAUTH_CLIENT_ID,
@@ -79,26 +85,31 @@ const msalConfig = {
       logLevel: msal.LogLevel.Verbose,
     }
   }
-};
+};*/
 
 // Create msal application object
-app.locals.msalClient = new msal.ConfidentialClientApplication(msalConfig);
+//app.locals.msalClient = new msal.ConfidentialClientApplication(msalConfig);
 
-app.set('view engine', 'hbs');
+//app.set('view engine', 'hbs');
 
 
 app.use( express.static( 'public' ) )
 app.use( express.urlencoded( { encoded: true } ) )
 app.use( express.json() )
 
-app.use( "/usuarios", userRouter )
-app.use( "/outlook-auth", outlookAuthRouter )
+app.use( "/users", userRouter )
+//app.use( "/outlook-auth", outlookAuthRouter )
 app.use( `/auth`, authRouter )
-app.use( `/preferencias`, PreferenciaController )
-app.use( `/formularios`, FormularioController )
-app.use( `/licencias`, LicenseKeyController )
-app.use( `/zoom`, ZoomController )
-app.use( `/categories`, CategoryController )
+app.use(`/google`, googleRouter )
+app.use(`/apple`, appleRouter )
+app.use( `/stripe`, stripeRouter )
+app.use( `/order`, orderRouter )
+app.use( `/ecwid`, ecwidRouter )
+//app.use( `/preferencias`, PreferenciaController )
+//app.use( `/formularios`, FormularioController )
+//app.use( `/licencias`, LicenseKeyController )
+//app.use( `/zoom`, ZoomController )
+//app.use( `/categories`, CategoryController )
 app.use( '/', indexRouter )
 
-app.listen( 5000, () => console.info( `Idelika Backend started and listening on port 5000` ) )
+app.listen( 4000, () => console.info( `Idelika Backend started and listening on port 4000` ) )

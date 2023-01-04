@@ -7,7 +7,12 @@ router.get('/', function(req, res, next) {
     active: { home: true }
   };
 
-  res.render('index', params);
+  //res.render('index', params);
+  res.send('🪑 Idelika© Backend v0.1')
 });
+
+router.get('/test', (req, res) => {
+  res.json({message: '🪑 Idelika© Backend v0.1'})
+})
 
 module.exports = router;
