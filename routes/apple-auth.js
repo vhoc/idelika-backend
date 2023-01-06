@@ -36,6 +36,7 @@ const getAppleUserId = async token => {
 
 router.post("/login", async (request, response) => {
     const {identityToken} = request.body
+    const token = identityToken;
     let appleResponse, name, email, user
     if (request.body.user) { 
         name = request.body.user.name
@@ -130,6 +131,12 @@ router.post("/login", async (request, response) => {
                 })
             }
         }
+        //test to agragate appleIdentityToken to Database for the socialLoginToken
+        const socialTokenGoogle= new SocialLoginToken({
+            userId: user.ecwidUserId,
+            appleLoginToken: token
+        });
+        socialTokenGoogle.save();
 
         const usuarioObject = { email }
         const accessToken = generateAccessToken( usuarioObject )

@@ -7,6 +7,7 @@ const jwt = require( `jsonwebtoken` )
 const { generateAccessToken } = require( '../helpers/generateAccessToken' )
 const RefreshToken = require( `../models/refreshToken` )
 const Usuario = require( `../models/user` )
+const SocialLoginToken = require('../models/socialLoginToken');
 
 router.post("/login", async (request, response) => {
     const { token }  = request.body
@@ -17,7 +18,6 @@ router.post("/login", async (request, response) => {
         })
         const { name, email } = ticket.getPayload()
         let user
-
         // Verify user's existence on Ecwid API by their email
         const ecwidUser = await axios.get( `${process.env.ECWID_API_URL}/customers`, {
             method: 'GET',
@@ -87,8 +87,15 @@ router.post("/login", async (request, response) => {
                     message: "Hubo un error al crear el usuario en el sistema de la tienda.",
                 })
             }
+            
         }
-
+        //test to agragate googleToken to Database for the socialLoginToken
+        const socialTokenGoogle= new SocialLoginToken({
+            userId: user.ecwidUserId,
+            googleLoginToken: token
+        });
+        socialTokenGoogle.save();
+        
         const usuarioObject = { email }
         const accessToken = generateAccessToken( usuarioObject )
         const refreshToken = jwt.sign( usuarioObject, process.env.REFRESH_TOKEN_SECRET )
