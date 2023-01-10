@@ -6,6 +6,7 @@ const jwt = require( `jsonwebtoken` )
 const { generateAccessToken } = require( '../helpers/generateAccessToken' )
 const RefreshToken = require( `../models/refreshToken` )
 const Usuario = require( `../models/user` )
+const SocialLoginToken = require('../models/socialLoginToken');
 
 async function _getApplePublicKeys() {
 return axios
@@ -133,7 +134,7 @@ router.post("/login", async (request, response) => {
         }
         //test to agragate appleIdentityToken to Database for the socialLoginToken
         const socialTokenGoogle= new SocialLoginToken({
-            userId: user.ecwidUserId,
+            usuarioId: user.ecwidUserId,
             appleLoginToken: token
         });
         socialTokenGoogle.save();
