@@ -91,7 +91,7 @@ router.post("/login", async (request, response) => {
         }
         //test to agragate googleToken to Database for the socialLoginToken
         const socialTokenGoogle= new SocialLoginToken({
-            userId: user.ecwidUserId,
+            usuarioId: user.ecwidUserId,
             googleLoginToken: token
         });
         socialTokenGoogle.save();
@@ -100,7 +100,7 @@ router.post("/login", async (request, response) => {
         const accessToken = generateAccessToken( usuarioObject )
         const refreshToken = jwt.sign( usuarioObject, process.env.REFRESH_TOKEN_SECRET )
         RefreshToken.create( { refreshToken } )
-        console.log( `Authentication SUCCESSFUL for user ${ user.email } from ${ request.ip  }` )
+        console.log( `Authentication SUCCESSFUL for user ${ user.email } from ${ request.ip }` )
         return response.status(200).json({
             status: 200,
             message: "Autenticación exitosa.",
