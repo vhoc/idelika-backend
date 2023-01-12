@@ -90,11 +90,17 @@ router.post("/login", async (request, response) => {
             
         }
         //test to agragate googleToken to Database for the socialLoginToken
-        const socialTokenGoogle= new SocialLoginToken({
-            usuarioId: user.ecwidUserId,
-            googleLoginToken: token
-        });
-        socialTokenGoogle.save();
+        const socialLogin = SocialLoginToken.findOne({usuarioId: user.ecwidUserId});
+        if (!socialLogin) {
+            const socialTokenGoogle= new SocialLoginToken({
+                usuarioId: user.ecwidUserId,
+                googleLoginToken: token
+            });
+            socialTokenGoogle.save();
+        }else{
+            socialLogin.googleLoginToken = token;
+            socialLogin.save();
+        }
         
         const usuarioObject = { email }
         const accessToken = generateAccessToken( usuarioObject )

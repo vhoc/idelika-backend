@@ -133,12 +133,20 @@ router.post("/login", async (request, response) => {
             }
         }
         //test to agragate appleIdentityToken to Database for the socialLoginToken
-        const socialTokenGoogle= new SocialLoginToken({
-            usuarioId: user.ecwidUserId,
-            appleLoginToken: token
-        });
-        socialTokenGoogle.save();
-
+    
+        const socialLogin= SocialLoginToken.findOne({ usuarioId: user.ecwidUserId});
+        if (!socialLogin) {
+            const socialTokenGoogle= new SocialLoginToken({
+                usuarioId: user.ecwidUserId,
+                appleLoginToken: token
+            });
+            socialTokenGoogle.save();
+        }
+        else{
+            socialLogin.appleLoginToken = token;
+            socialLogin.save();
+        }
+        
         const usuarioObject = { email }
         const accessToken = generateAccessToken( usuarioObject )
         const refreshToken = jwt.sign( usuarioObject, process.env.REFRESH_TOKEN_SECRET )
