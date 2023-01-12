@@ -179,6 +179,7 @@ router.delete( '/:id', async (request, response) => {
         console.log(`Received token: ${refreshToken}`)
 
         // Check password existence
+        /*
         if( !request.headers.password ) response.status(403).json( {status: 403, message: "Acceso no autorizado (#2)" } )
 
         // Check password validity
@@ -186,6 +187,7 @@ router.delete( '/:id', async (request, response) => {
             console.log( `Authentication FAILED for deleting user ${ usuario.email } from ${ request.ip  }` )
             return response.status(401).json( { status: 401, message: "La contraseña es incorrecta." } )
         }
+        */
 
         // Check token validity
         if ( refreshToken == null ) return response.status(401).json( {status: 401, message: "Acceso no autorizado (#4)" } )
