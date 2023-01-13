@@ -228,7 +228,8 @@ router.delete( '/:id', async (request, response) => {
         }
 
         //revoke google access tesst
-        const socialLogin = await SocialLoginToken.findOne({userId: usuario.ecwidUserId});
+        const socialLogin = await SocialLoginToken.findOne({usuarioId: usuario.ecwidUserId});
+        
         if (socialLogin.googleLoginToken !==null) {
             // const ticket = await client.verifyIdToken({
             //     idToken: socialLogin.googleLoginToken,
@@ -237,6 +238,7 @@ router.delete( '/:id', async (request, response) => {
             // const {email} = ticket.getPayload();
             // if (email===usuario.email) {
             // }
+            console.log(client._clientId);
             client.revokeToken(socialLogin.googleLoginToken);
         }
         if (socialLogin.appleLoginToken!=null) {
@@ -252,7 +254,7 @@ router.delete( '/:id', async (request, response) => {
             }
         }
         
-        await socialLogin.deleteOne({userId: usuario.ecwidUserId});
+        await socialLogin.deleteOne({usuarioId: usuario.ecwidUserId});
         //end test
         await RefreshToken.deleteOne( { refreshToken: refreshToken } )
         await usuario.deleteOne( { _id: request.params.id } )
