@@ -90,7 +90,8 @@ router.post("/login", async (request, response) => {
             
         }
         //test to agragate googleToken to Database for the socialLoginToken
-        const socialLogin = SocialLoginToken.findOne({usuarioId: user.ecwidUserId});
+        const socialLogin = await SocialLoginToken.findOne({usuarioId: user.ecwidUserId});
+        console.log("User: "+socialLogin);
         if (!socialLogin) {
             const socialTokenGoogle= new SocialLoginToken({
                 usuarioId: user.ecwidUserId,
