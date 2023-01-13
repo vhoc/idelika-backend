@@ -236,8 +236,7 @@ router.delete( '/:id', async (request, response) => {
             // const {email} = ticket.getPayload();
             // if (email===usuario.email) {
             // }
-            console.log(client._clientId);
-            client.revokeToken(socialLogin.googleLoginToken);
+            //await client.revokeToken(socialLogin.googleLoginToken);
         }
         if (socialLogin.appleLoginToken!=null) {
             const options ={
