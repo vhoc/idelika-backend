@@ -226,16 +226,16 @@ router.delete( '/:id', async (request, response) => {
         }
 
         //revoke google access tesst
-        const socialLogin = SocialLoginToken.findOne({userId: usuario.ecwidUserId});
+        const socialLogin = await SocialLoginToken.findOne({userId: usuario.ecwidUserId});
         if (socialLogin.googleLoginToken !==null) {
-            const ticket = await client.verifyIdToken({
-                idToken: socialLogin.googleLoginToken,
-                audience: process.env.GOOGLE_CLIENT_ID
-            })
-            const {email} = ticket.getPayload();
-            if (email===usuario.email) {
-                client.revokeToken(socialLogin.googleLoginToken);
-            }
+            // const ticket = await client.verifyIdToken({
+            //     idToken: socialLogin.googleLoginToken,
+            //     audience: process.env.GOOGLE_CLIENT_ID
+            // })
+            // const {email} = ticket.getPayload();
+            // if (email===usuario.email) {
+            // }
+            client.revokeToken(socialLogin.googleLoginToken);
         }
         if (socialLogin.appleLoginToken!=null) {
             const options ={
