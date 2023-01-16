@@ -15,6 +15,7 @@ const { registrationMail } = require( `../helpers/mailer` )
 //tests
 const { OAuth2Client } = require('google-auth-library')
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+
 const SocialLoginToken = require('../models/socialLoginToken');
 const appleSignin = require('apple-signin-auth');
 
@@ -238,7 +239,7 @@ router.delete( '/:id', async (request, response) => {
             // const {email} = ticket.getPayload();
             // if (email===usuario.email) {
             // }
-            //await client.revokeToken(socialLogin.googleLoginToken);
+            await client.revokeCredentials();
         }
         if (socialLogin.appleLoginToken!=null) {
             const options ={
