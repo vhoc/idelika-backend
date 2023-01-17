@@ -30,7 +30,6 @@ router.get( '/', async ( request, response ) => {
         console.error( error )
     }
 } )
-
 // Get one
 router.get( '/:id', async ( request, response ) => {
     //response.send( `Get one user: ${ request.params.id }` )
@@ -164,9 +163,9 @@ router.post( '/', [validateCreate, validatePassword], async ( request, response 
     }
 } )
 
+
 // Delete the user
 router.delete( '/:id', async (request, response) => {
-
     try {
         const usuario = await Usuario.findOne( { _id: request.params.id } )
 
@@ -230,17 +229,7 @@ router.delete( '/:id', async (request, response) => {
 
         //revoke google access tesst
         const socialLogin = await SocialLoginToken.findOne({usuarioId: usuario.ecwidUserId});
-        
-        if (socialLogin.googleLoginToken !==null) {
-            // const ticket = await client.verifyIdToken({
-            //     idToken: socialLogin.googleLoginToken,
-            //     audience: process.env.GOOGLE_CLIENT_ID
-            // })
-            // const {email} = ticket.getPayload();
-            // if (email===usuario.email) {
-            // }
-            await client.revokeCredentials();
-        }
+        if (socialLogin.googleLoginToken !==null) {}
         if (socialLogin.appleLoginToken!=null) {
             const options ={
                 clientID: process.env.APPLE_CLIENT_ID,
