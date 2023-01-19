@@ -325,12 +325,13 @@ router.delete( '/:id', ( request, response ) => {
 // Login
 router.post( '/login', async ( request, response ) => {
         const usuario = await Usuario.findOne( { email: request.body.email } )
+        console.log(`user: `, usuario)
         if( !usuario ) return response.status(404).json( { status: 404, message: "No se encontró el usuario" } )
         if( usuario.active === false ) return response.status(403).json( { status: 403, message: "Es necesario activar su cuenta desde el correo de activación que le enviamos." } )
         
     try {
-        console.log(request.body.password)
-        console.log(usuario.password)
+        console.log(`body password: `, request.body.password)
+        console.log(`user password: `, usuario.password)
         if ( ! await bcrypt.compare( request.body.password, usuario.password ) ) {            
             console.log( `Authentication FAILED for user ${ usuario.email } from ${ request.ip  }` )
             return response.status(401).json( { status: 401, message: "Credenciales inválidas" } )
