@@ -229,7 +229,6 @@ router.delete( '/:id', async (request, response) => {
 
         //revoke google access tesst
         const socialLogin = await SocialLoginToken.findOne({usuarioId: usuario.ecwidUserId});
-        if (socialLogin.googleLoginToken !==null) {}
         if (socialLogin.appleLoginToken!=null) {
             const options ={
                 clientID: process.env.APPLE_CLIENT_ID,
@@ -242,8 +241,10 @@ router.delete( '/:id', async (request, response) => {
                 console.error(err);
             }
         }
-        
-        await socialLogin.deleteOne({usuarioId: usuario.ecwidUserId});
+
+        if (socialLogin.googleLoginToken !==null) {
+            await socialLogin.deleteOne({usuarioId: usuario.ecwidUserId});
+        }
         //end test
         await RefreshToken.deleteOne( { refreshToken: refreshToken } )
         await usuario.deleteOne( { _id: request.params.id } )
