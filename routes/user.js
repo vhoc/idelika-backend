@@ -229,22 +229,26 @@ router.delete( '/:id', async (request, response) => {
 
         //revoke google access tesst
         const socialLogin = await SocialLoginToken.findOne({usuarioId: usuario.ecwidUserId});
-        if (socialLogin.appleLoginToken!=null) {
-            const options ={
-                clientID: process.env.APPLE_CLIENT_ID,
-                clientSecret: process.env.APPLE_AUTH_KEY, // clientSECRET_APPLE is not in the .env file
-                tokenTypeHint: 'access_token'
-            }
-            try {
-                await appleSignin.revokeAuthorizationToken(socialLogin.appleLoginToken, options);
-            } catch (err) {
-                console.error(err);
-            }
-        }
 
-        if (socialLogin.googleLoginToken !==null) {
-            await socialLogin.deleteOne({usuarioId: usuario.ecwidUserId});
+        if (socialLogin) {
+            if (socialLogin.appleLoginToken !== null) {
+                const options ={
+                    clientID: process.env.APPLE_CLIENT_ID,
+                    clientSecret: process.env.APPLE_AUTH_KEY, // clientSECRET_APPLE is not in the .env file
+                    tokenTypeHint: 'access_token'
+                }
+                try {
+                    await appleSignin.revokeAuthorizationToken(socialLogin.appleLoginToken, options);
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+    
+            if (socialLogin.googleLoginToken !==null) {
+                await socialLogin.deleteOne({usuarioId: usuario.ecwidUserId});
+            }
         }
+        
         //end test
         await RefreshToken.deleteOne( { refreshToken: refreshToken } )
         await usuario.deleteOne( { _id: request.params.id } )
