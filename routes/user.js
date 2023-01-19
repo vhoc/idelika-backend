@@ -325,8 +325,8 @@ router.delete( '/:id', ( request, response ) => {
 // Login
 router.post( '/login', async ( request, response ) => {
         const usuario = await Usuario.findOne( { email: request.body.email } )
-        console.log(`user: `, usuario)
         if( !usuario ) return response.status(404).json( { status: 404, message: "No se encontró el usuario" } )
+        if( !usuario.password ) return response.status(403).json( { status: 403, message: "Ya existe un usuario dado de alta con otro método de registro." } )
         if( usuario.active === false ) return response.status(403).json( { status: 403, message: "Es necesario activar su cuenta desde el correo de activación que le enviamos." } )
         
     try {
