@@ -329,6 +329,8 @@ router.post( '/login', async ( request, response ) => {
         if( usuario.active === false ) return response.status(403).json( { status: 403, message: "Es necesario activar su cuenta desde el correo de activación que le enviamos." } )
         
     try {
+        console.log(request.body.password)
+        console.log(usuario.password)
         if ( ! await bcrypt.compare( request.body.password, usuario.password ) ) {            
             console.log( `Authentication FAILED for user ${ usuario.email } from ${ request.ip  }` )
             return response.status(401).json( { status: 401, message: "Credenciales inválidas" } )
