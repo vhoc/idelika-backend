@@ -11,6 +11,7 @@ const { passResetMail } = require( `../helpers/mailer` )
 
 const RefreshToken = require( `../models/refreshToken` )
 const { validatePassword } = require( '../validators/usuarios' )
+const { getTokenData } = require( `../helpers/generateActivationLink` )
 
 /**
  * TODO:
@@ -159,7 +160,8 @@ router.post( "/password-change/:usuarioId", validatePassword, async ( request, r
     }
 } )
 
-// Account Activation
+// OLD Account Activation
+/*
 router.get( `/activate/:usuarioId/:token`, async ( request, response ) => {
     try {
         const user = await Usuario.findById( request.params.usuarioId )
@@ -173,6 +175,7 @@ router.get( `/activate/:usuarioId/:token`, async ( request, response ) => {
             usuarioId: user._id,
             token: request.params.token,
         })
+
         if ( !token ) {
             console.log( `The specified token has not been found` )
              //return response.redirect( `${ process.env.FRONTEND_URL }activacion?status=invalid` )
@@ -184,6 +187,34 @@ router.get( `/activate/:usuarioId/:token`, async ( request, response ) => {
         user.save()
         token.delete()
         //return response.redirect( `${ process.env.FRONTEND_URL }activacion?status=valid` )
+        return response.redirect( `${ process.env.FRONTEND_URL }activacion/valido?name=${user.name}` )
+    } catch ( error ) {
+        console.log( error )
+        return response.send( `Ha ocurrido un error.` )
+    }
+} )*/
+
+// NEW Account Activation
+router.get( `/activate/:usuarioId/:token`, async ( request, response ) => {
+    try {
+        const user = await Usuario.findById( request.params.usuarioId )
+        if ( !user ) {
+            console.log( `No user has been found for this token` )
+            //return response.redirect( `${ process.env.FRONTEND_URL }activacion?status=invalid` )
+            return response.redirect( `${ process.env.FRONTEND_URL }activacion/invalido` )
+        }
+
+        const token = request.params.token
+        const data = await getTokenData(token)
+
+        if (data === null) {
+            console.log(`Error al decodificar token desde el correo de activación de cuenta.`)
+            return response.redirect( `${ process.env.FRONTEND_URL }activacion/invalido` )
+        }
+
+        user.active = true
+        await user.save()
+
         return response.redirect( `${ process.env.FRONTEND_URL }activacion/valido?name=${user.name}` )
     } catch ( error ) {
         console.log( error )

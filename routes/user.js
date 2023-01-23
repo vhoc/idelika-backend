@@ -46,8 +46,114 @@ router.get( '/:id', async ( request, response ) => {
     }
 } )
 
+// NEW REGISTRATION
+router.post( `/`, [validateCreate, validatePassword], async (request, response) => {
+
+    // Encrypt password
+    const salt = await bcrypt.genSalt()
+    const hashedPassword = await bcrypt.hash( request.body.password, salt )
+
+    // Verify user's existence on Ecwid API by their email
+    const ecwidUser = await axios.get( `${process.env.ECWID_API_URL}/customers`, {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: process.env.IDELIKA_ACCESS_TOKEN
+        },
+        params: { email: request.body.email }
+    } )
+    
+    // If the user's email exists on Ecwid, get user's data
+    // and add it to the new user on the local database.
+    if (ecwidUser.data.items.length > 0) {
+
+        const user = new Usuario({
+            ecwidUserId: ecwidUser.data.items[0].id,
+            name: request.body.name,
+            type: request.body.type,
+            email: request.body.email,
+            password: hashedPassword,
+            phone: request.body.phone,
+            active: false,
+        })
+        user.save()
+        registrationMail( request.body.email, user )
+        console.log( `New user ${ request.body.email } registered.` )
+        return response.status(201).json( {
+            status: 201,
+            message: "Gracias por registrarte. En breve recibirás un correo electrónico con un enlace de activación que deberás visitar para comenzar a usar tu cuenta.",
+            user: {
+                ecwidUserId: user.ecwidUserId,
+                email: user.email,
+                type: user.type,
+                name: user.name,
+                phone: user.phone,
+                active: user.active,
+            }
+        } )
+
+    } else {
+        // If email doesnt exist on Ecwid API:
+        // Create customer on Ecwid, with tier (customer group) 0
+        // Create user on local database
+        axios.post( `${process.env.ECWID_API_URL}/customers`, {
+            email: request.body.email,
+            password: request.body.password,
+            customerGroupId: 0,
+            billingPerson: {
+                name: request.body.name,
+            }
+        }, {
+            headers: {
+                "method": 'POST',
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: process.env.IDELIKA_ACCESS_TOKEN
+            },
+        } ).then((ecwidResponse) => {
+            //console.log(`Created on ecwid: ${ecwidResponse.data.id}`)
+            const user = new Usuario({
+                ecwidUserId: ecwidResponse.data.id,
+                name: request.body.name,
+                type: request.body.type,
+                email: request.body.email,
+                password: hashedPassword,
+                phone: request.body.phone,
+                active: false,
+            })
+            user.save()
+            registrationMail( request.body.email, user )
+            console.log( `New user ${ request.body.email } registered.` )
+            return response.status(201).json( {
+                status: 201,
+                message: "Gracias por registrarte. En breve recibirás un correo electrónico con un enlace de activación que deberás visitar para comenzar a usar tu cuenta.",
+                user: {
+                    ecwidUserId: user.ecwidUserId,
+                    email: user.email,
+                    type: user.type,
+                    name: user.name,
+                    phone: user.phone,
+                    active: user.active,
+                }
+            } )
+        }).catch(error => {
+            console.error(error)
+            return response.status(422).json({
+                status: 422,
+                message: "Hubo un error al crear el usuario en el sistema de la tienda.",
+            })
+        })
+    }
+    
+
+
+
+} )
+
 // REGISTRATION
-router.post( '/', [validateCreate, validatePassword], async ( request, response ) => {
+//router.post( '/', [validateCreate, validatePassword], async ( request, response ) => {
+router.post( '/disabled', [validateCreate, validatePassword], async ( request, response ) => {
 
     try {
 

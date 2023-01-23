@@ -21,7 +21,7 @@ const registrationMail = async ( address, usuario ) => {
 
     const template = handlebars.compile(emailTemplateSource)
     const htmlToSend = template({
-        userName: usuario.nombre,
+        userName: usuario.name,
         activationLink: activationLink,
     })
 
