@@ -21,7 +21,7 @@ const generateActivationLink = async ( usuario ) => {
 }*/
 const generateActivationLink = async ( user ) => {
     const token = getToken(user)
-    const link = `${process.env.FRONTEND_URL}api/auth/activate/${usuario._id}/${token}`;
+    const link = `${process.env.FRONTEND_URL}api/auth/activate/${user._id}/${token}`;
     return link
 }
 
