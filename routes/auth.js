@@ -204,6 +204,11 @@ router.get( `/activate/:usuarioId/:token`, async ( request, response ) => {
             return response.redirect( `${ process.env.FRONTEND_URL }activacion/invalido` )
         }
 
+        if (user.active === true) {
+            console.log( `Active user has requested activation.` )
+            return response.redirect( `${ process.env.FRONTEND_URL }activacion/invalido` )
+        }
+
         const token = request.params.token
         const data = await getTokenData(token)
 
